@@ -1,0 +1,26 @@
+﻿@using System.Web.Optimization
+
+@{ 
+    ViewBag.Title = "강남 푸르덴셜 내방 관리자 웹";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <meta charset="utf-8">
+    <link rel="icon" href="@Url.Content("~/content/favicon.ico")" />
+    @Styles.Render("~/Content/Css")
+    @Styles.Render("~/Content/Font")
+    @Styles.Render("~/Content/Layout")
+    @Scripts.Render("~/Script/js")
+    @Scripts.Render("~/Script/JsMigrate")
+    @Scripts.Render("~/Script/Validate")
+    
+
+    @RenderSection("scripts", required: false)
+</head>
+<body>
+      @RenderBody()
+</body>
+</html>
+

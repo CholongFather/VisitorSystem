@@ -1,0 +1,33 @@
+﻿@using System.Web.Optimization
+@{
+    ViewBag.Title = "강남 푸르덴셜 내방객 웹";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <meta charset="utf-8">
+    <link rel="icon" href="@Url.Content("~/content/favicon.ico")" />
+    @Styles.Render("~/Content/TabletCss")
+    @Styles.Render("~/Content/TabletFont")
+    @Styles.Render("~/Content/TabletLayout")
+    @Scripts.Render("~/Script/js")
+    @Scripts.Render("~/Script/JsMigrate")
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        function disableBackButton() {
+            window.history.forward()
+        }
+        disableBackButton();
+        window.onload = disableBackButton();
+        window.onpageshow = function (evt) { if (evt.persisted) disableBackButton() }
+        window.onunload = function () { void (0) }  
+    </script>
+</head>
+<body>
+    <div id="wrapper">
+        @RenderBody()
+    </div>
+</body>
+</html>

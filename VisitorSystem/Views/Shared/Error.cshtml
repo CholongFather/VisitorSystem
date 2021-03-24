@@ -1,0 +1,14 @@
+﻿
+
+@{
+    ViewBag.Title = "커스텀 에러 페이지";
+}
+
+<h2>Error</h2>
+
+<p>알수 없는 에러가 발생했습니다. 로그를 참고하시거나 뒤로 돌아가주세요.</p>
+
+<p>밑은 에러 내용입니다. 개발자에게 전달해주십시요.</p>
+<p>Controller 이름 : @Model.ControllerName</p>
+<p>Action 이름 : @Model.ActionName</p>
+<p>@Model.Exception</p>

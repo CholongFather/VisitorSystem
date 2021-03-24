@@ -1,0 +1,118 @@
+﻿@model List<VisitorSystem.Models.Visitor>
+
+<script>
+    function AddVisitor() {
+        location.href = '@Url.Action("VisitorDetail", "Admin", new { VisitorID = 0 })';
+    }
+    function BlackListAdd(VisitorID) {
+        if (confirm("내방객을 블랙리스트로 등록하시겠습니까?"))
+            location.href = '@Url.Action("VisitorBlackListAdd", "Admin")?VisitorID=' + VisitorID;
+        else
+            return false;
+    }
+        function BlackListDelete(VisitorID) {
+        if (confirm("등록된 블랙 리스트를 지우시겠습니까?"))
+            location.href = '@Url.Action("VisitorBlackListDelete", "Admin")?VisitorID=' + VisitorID;
+        else
+            return false;
+    }
+</script>
+
+<div id="contents">
+    <div class="sub_container">
+        <div class="row">
+            <div class="col md-1">
+                <div class="sub_heading">
+                    <h2 class="mr15">내방객 리스트</h2>
+                    <button class="btn-top" onclick="AddVisitor()">내방객 등록</button>
+                    <div class="search-container">
+                        <form id="search" method="get">
+                            <select id="sbSearchColumn" class="form-control form-inline">
+                                <option value="VisitorName" selected="selected">성명</option>
+                                <option value="Company">회사</option>
+                                <option value="Mobile">연락처</option>
+                            </select>
+                            <input type="hidden" id="SearchColumn" name="SearchColumn" value="@ViewBag.SearchColumn">
+                            <input type="text" id="txtSearchString" value="@ViewBag.SearchString">
+                            <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString">
+                            <button onclick="search()"><span class="icon seach"></span></button>
+                            <input type="hidden" name="currentPage" id="currentPage" value="@ViewBag.CurrentPage" />
+                        </form>
+                    </div><!-- .search-container(E) -->
+                </div><!-- .sub_heading(E) -->
+                <div class="row">
+                    <div class="md-1">
+                        <table class="list" width="100%" summary="내방객 리스트">
+                            <caption><span class="offsreen">내방객 리스트</span></caption>
+                            <colgroup>
+                                <col width="20%" />
+                                <col width="20%" />
+                                <col width="20%" />
+                                <col width="*" />
+                            </colgroup>
+                            <thead>
+                            <th scope="성명">성명</th>
+                            <th scope="회사">회사</th>
+                            <th scope="연락처">연락처</th>
+                            <th scope="접견인">마지막 내방일자</th>
+                            <th scope="블랙리스트">블랙리스트</th>
+                            </thead>
+                                <!--테이블 내용 부분-->
+                            <tbody>
+                                @foreach (VisitorSystem.Models.Visitor Visitor in Model)
+                                {
+                                    string style = string.IsNullOrEmpty(Visitor.BlackList) ? "" : "color:red;";
+                                <tr style="@style">
+                                    <td>@Html.ActionLink(Visitor.VisitorName, "VisitorDetail", new { VisitorID = Visitor.VisitorID }, new { @class = "link", @style = style })</td>
+                                    <td>@Html.DisplayFor(m => Visitor.Company)</td>
+                                    <td>@Html.DisplayFor(m => Visitor.Mobile)</td>
+                                    <td>@Html.DisplayFor(m => Visitor.LastVisitDate)</td>
+                                    @if (Visitor.BlackList == null)
+                                    {
+                                        <td><span class="badge badge-check" style="cursor:pointer" onclick="BlackListAdd(@Visitor.VisitorID)">블랙리스트 등록</span></td>
+                                    }
+                                    else
+                                    {
+                                        <td><span class="badge badge-no" style="cursor:pointer" onclick="BlackListDelete(@Visitor.VisitorID)">블랙리스트</span></td>
+                                    }
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <!--table(E)-->
+                        <div class="pageing">
+                            <ul class="page">
+
+                                @{
+                                    int pageCount = ViewBag.TotalCount / ViewBag.PagePerData + 1;
+                                    <li><a href="javascript:pagePrev()"><span class="icon prev">&nbsp;</span></a></li>
+                                    for (int i = 1; i < pageCount + 1; i++)
+                                    {
+                                        if (i == ViewBag.CurrentPage)
+                                        {
+                                            <li><a href="javascript:pageMove(@i);" class="active">@i</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a href="javascript:pageMove(@i);">@i</a></li>
+                                        }
+
+                                    }
+                                    <li><a href="javascript:pageNext(@pageCount)"><span class="icon next">&nbsp;</span></a></li>
+                                }
+
+                            </ul>
+                        </div><!-- .paging(E) -->
+                    </div><!-- .md-1(E) -->
+                </div><!-- .row(E) -->
+
+            </div><!--col-->
+        </div><!--.row-->
+        
+    </div><!-- .sub_container(E) -->
+</div><!--contents(E)-->
+
+
+
+

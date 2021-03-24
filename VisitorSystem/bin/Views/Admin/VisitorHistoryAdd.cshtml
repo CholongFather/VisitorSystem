@@ -1,0 +1,61 @@
+﻿@model VisitorSystem.Models.VisitorInfo
+
+<form action="/Admin/VisitorHistoryDetail" method="post">
+    <div id="contents">
+        <div class="sub_container">
+            <div class="row">
+                <div class="col md-1">
+                    <div class="sub_heading border_b">
+                        <h2>내방 이력 등록</h2>
+                    </div><!-- .sub_heading(E) -->
+                    @Html.HiddenFor(m => m.VisitorID)
+                    @Html.HiddenFor(m => m.HostID)
+                    <div class="row">
+                        <div class="md-1">
+                            <table class="view" width="100%" summary="view">
+                                <col width="15%" />
+                                <col width="20%" />
+                                <col width="15%" />
+                                <col width="20%" />
+                                </colgroup>
+                                <tbody>
+                                    <tr>
+                                        <th>성명</th>
+                                        <td>@Html.TextBoxFor(m => m.VisitorName)</td>
+                                        <th>접견인</th>
+                                        <td>@Html.TextBoxFor(m => m.HostName)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>연락처</th>
+                                        <td>@Html.TextBoxFor(m => m.VisitorMobile)</td>
+                                        <th>회사명</th>
+                                        <td>@Html.TextBoxFor(m => m.HostCompany)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>회사명</th>
+                                        <td>@Html.TextBoxFor(m => m.VisitorCompany)</td>
+
+                                    </tr>
+                                    <tr>
+                                        <th>내방 일자</th>
+                                        <td>@Html.TextBox(DateTime.Now.ToString())</td>
+
+                                    </tr>
+                                    <tr>
+                                        <th class="pt30">내방 전달 사항</th>
+                                        <td colspan="3">
+                                            <textarea></textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="btn_area view">
+                                <button class="btn mr10" type="submit">저장</button><button class="btn badge-info" type="submit">목록</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

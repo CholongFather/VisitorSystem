@@ -1,0 +1,395 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<sqlMap namespace="Admin" xmlns=
+"http://ibatis.apache.org/mapping" xmlns:xsi=
+"http://www.w3.org/2001/XMLSchema-instance" >
+  <statements>
+    <!--AdminController에서 사용하는 쿼리 모음 파라미터 매핑시에는 ##( => '') 로만 쓰길 바람  $$( => Raw 조합때 사용) 쓸경우 Injection 공격을 막을수 없고 제대로 동작하지 않음.-->
+    <!--Admin 영역 S-->
+    <select id="GetAdminUser" parameterClass="AdminUser" resultClass="AdminUser">
+      SELECT
+      AdminID,
+      LastChangePWDate
+      FROM
+      AdminUser
+      WHERE
+      DELETEFLAG = 'N' AND
+      AdminID = #AdminID# AND
+      AdminPW = #AdminPW#
+    </select>
+
+    <update id="SetAdminUserLoginDate" parameterClass="AdminUser">
+      UPDATE
+      AdminUser
+      SET
+      LastLoginDate = Getdate()
+      WHERE
+      AdminID = #AdminID#
+    </update>
+
+    <update id="SetAdminUserPassword" parameterClass="AdminUser">
+      UPDATE
+      AdminUser
+      SET
+      AdminPW = #AdminPW#,
+      LastChangePWDate = Getdate()
+      WHERE
+      AdminID = #AdminID#
+    </update>
+
+    <insert id="SetAdminLog" parameterClass="AdminLog">
+      INSERT INTO
+      AdminLog
+      (AdminID, Action, DateTime, LocationID)
+      VALUES
+      (#AdminID#, #Action#, Getdate(), #LocationID#)
+    </insert>
+    <!--Admin 영역 E-->
+    
+    <!--Visitor 영역 S -->
+    <select id="GetVisitorHistoryList" resultClass="VisitorInfo">
+      SELECT
+      B.VisitorHistorySeq,
+      A.VisitorID,
+      A.VisitorName,
+      A.Company AS VisitorCompany,
+      A.Mobile AS VisitorMobile,
+      B.HostID,
+      (SELECT HOSTNAME FROM HOST WHERE HOSTID = B.HOSTID) AS HostName,
+      (SELECT Company FROM HOST WHERE HOSTID = B.HOSTID) AS HostCompany,
+      B.SignPath,
+      B.VisitDate AS VisitDateTime,
+      B.AgreeFirst As AgreeFirstFlag,
+      B.AgreeSecond As AgreeSecondFlag,
+      B.CARDID,
+      (SELECT CARDFLAG FROM CARD WHERE CARDID = B.CARDID) AS CARDFLAG,
+      (SELECT ISNULL([DESC],'N') FROM VisitorBlackList WHERE VisitorID = A.VisitorID) AS BlackList,
+      B.VisitorDesc
+      FROM
+      VISITOR A, VISITORHISTORY B
+      WHERE
+      A.VISITORID = B.VISITORID
+      ORDER BY VisitDateTime DESC
+    </select>
+
+    <select id="GetVisitorHistory" paratmeterClass="System.Int32" resultClass="VisitorInfo">
+      SELECT
+      B.VisitorHistorySeq,
+      A.VisitorID,
+      A.VisitorName,
+      A.Company AS VisitorCompany,
+      A.Mobile AS VisitorMobile,
+      B.HostID,
+      (SELECT HOSTNAME FROM HOST WHERE HOSTID = B.HOSTID) AS HostName,
+      (SELECT Company FROM HOST WHERE HOSTID = B.HOSTID) AS HostCompany,
+      B.SignPath,
+      B.VisitDate AS VisitDateTime,
+      B.AgreeFirst As AgreeFirstFlag,
+      B.AgreeSecond As AgreeSecondFlag,
+      B.CARDID,
+      (SELECT CARDFLAG FROM CARD WHERE CARDID = B.CARDID) AS CARDFLAG,
+      (SELECT ISNULL([DESC],'N') FROM VisitorBlackList WHERE VisitorID = A.VisitorID) AS BlackList
+      FROM
+      VISITOR A, VISITORHISTORY B
+      WHERE
+      A.VISITORID = B.VISITORID
+      AND
+      B.VisitorHistorySeq = #VisitorHistorySeq#
+    </select>
+
+    <select id="GetTodayVisitorHistory" resultClass="VisitorInfo">
+      SELECT
+      B.VisitorHistorySeq,
+      A.VisitorID,
+      A.VisitorName,
+      A.Company AS VisitorCompany,
+      A.Mobile AS VisitorMobile,
+      B.HostID,
+      (SELECT HostName FROM HOST WHERE HOSTID = B.HOSTID) AS HostName,
+      (SELECT Company FROM HOST WHERE HOSTID = B.HOSTID) AS HostCompany,
+      B.SignPath,
+      B.VisitDate AS VisitDateTime,
+      B.AgreeFirst As AgreeFirstFlag,
+      B.AgreeSecond As AgreeSecondFlag,
+      B.CARDID,
+      (SELECT CARDFLAG FROM CARD WHERE CARDID = B.CARDID) AS CARDFLAG,
+      (SELECT ADMINID FROM VisitorBlackList WHERE VisitorID = A.VisitorID) AS BlackList
+      FROM
+      VISITOR A, VISITORHISTORY B
+      WHERE
+      A.VISITORID = B.VISITORID AND
+      B.VisitDate Between CONVERT(VARCHAR, GETDATE(), 112) AND CONVERT(VARCHAR, DATEADD(Day,1,GETDATE()), 112)
+    </select>
+
+    <select id="GetVisitorList" resultClass="Visitor">
+      SELECT
+      VisitorID,
+      VisitorName,
+      Mobile,
+      Company,
+      LastVisitDate,
+      (SELECT ADMINID FROM VisitorBlackList WHERE VisitorID = A.VisitorID) AS BlackList
+      FROM
+      VISITOR A
+      WHERE
+      DeleteFlag = 'N'
+      ORDER BY
+      LastVisitDate
+      DESC
+    </select>
+
+    <update id="SetVisitor" parameterClass="Visitor">
+      UPDATE
+      VISITOR
+      SET
+      VisitorName = #VisitorName#,
+      Mobile = #Mobile#,
+      Company = #Company#
+      WHERE
+      VisitorID = #VisitorID#
+    </update>
+
+    <insert id="AddVisitor" parameterClass="Visitor">
+      INSERT INTO 
+      VISITOR
+      (VisitorName, Mobile, Company)
+      VALUES
+      (#VisitorName#, #Mobile#, #Company#)
+    </insert>
+
+    <update id="DeleteVisitor" resultClass="System.Int32">
+      UPDATE
+      VISITOR
+      SET
+      DeleteFlag = 'Y'
+      WHERE
+      VisitorID = #VisitorID#
+    </update>
+    
+     <select id="GetVisitorBlackList" resultClass="VisitorBlackList">
+      SELECT
+      A.VisitorID,
+      A.VisitorName,
+      A.Company,
+      A.Mobile,
+      B.AdminID,
+      B.InsertDate,
+      B.[Desc]
+      FROM
+      VISITOR A, VISITORBLACKLIST B
+      WHERE
+      A.VISITORID = B.VISITORID
+    </select>
+    
+    <insert id="AddVisitorBlackList" parameterClass="VisitorBlackList">
+      INSERT INTO
+      VISITORBLACKLIST (VisitorID, AdminID, [DESC], InsertDate)
+      VALUES
+      (#VisitorID#,#AdminID#,' ', GetDate())
+    </insert>
+    
+     <update id="SetVisitorBlackList" parameterClass="VisitorBlackList">
+       UPDATE
+       VISITORBLACKLIST
+       SET
+       [DESC] = #Desc#
+       WHERE
+       VisitorID = #VisitorID#
+     </update>
+    
+    <delete id="DeleteVisitorBlackList" parameterClass="System.Int32">
+      DELETE
+      FROM
+      VISITORBLACKLIST
+      WHERE
+      VisitorID = #VisitorID#
+    </delete>
+    
+    <!--Visitor 영역 E-->
+
+    <!--Host 영역 S -->
+    <select id="GetHostList" resultClass="Host">
+      SELECT
+      HostID
+      , HostName
+      , Mobile
+      , Company
+      , Tel
+      , GradeName
+      FROM Host
+      WHERE DELETEFLAG = 'N'
+    </select>
+    
+    <select id="GetHostRank" resultClass="Host">
+      SELECT
+      TOP 5 RANK() OVER(ORDER BY COUNT(A.HOSTID) DESC) AS RANK
+      , A.HostID
+      , B.HostName
+      , B.Company
+      , ISNULL(B.GradeName,'') AS GradeName
+      , ISNULL(B.Mobile,'') AS Mobile
+      , ISNULL(B.Tel,'') AS Tel
+      FROM VisitorHistory A, HOST B
+      WHERE A.HOSTID= B.HOSTID
+      AND A.VisitDate Between CONVERT(VARCHAR, DATEADD(Month,-1,GETDATE()), 112) AND CONVERT(VARCHAR, GETDATE(), 112) 
+      AND B.DELETEFLAG = 'N'
+      GROUP BY A.HOSTID
+      , B.HostName
+      , B.Company
+      , B.GradeName
+      , B.Mobile
+      , B.Tel
+    </select>
+
+    <update id="SetHost" parameter="Host">
+      UPDATE
+      HOST
+      SET
+      HostName = #HostName#,
+      Mobile = #Mobile#,
+      Tel = #Tel#,
+      Company = #Company#,
+      GradeName = #GradeName#
+      WHERE
+      HostID = #HostID#
+    </update>
+
+    <insert id="AddHost" parameter="Host">
+      INSERT INTO
+      HOST (HostName, Mobile, Tel, Company, GradeName, InsertDate)
+      VALUES
+      (#HostName#, #Mobile#, #Tel#, #Company#, #GradeName#, GetDate())
+    </insert>
+
+    <update id="DeleteHost" parameter="System.Int32">
+      UPDATE
+      HOST
+      SET
+      DELETEFLAG = 'Y'
+      WHERE
+      HostID = #HostId#
+    </update>
+    <!--Host 영역 E-->
+
+    <select id="GetCardList" resultClass="Card">
+      SELECT
+      CardID
+      , CardNo
+      , CardFlag
+      , InsertDate
+      FROM Card
+      WHERE DELETEFLAG = 'N'
+      ORDER BY CardID
+    </select>
+
+    <update id="SetCard" parameter="Card">
+      UPDATE
+      CARD
+      SET
+      CardNo = #CardNo#,
+      CardFlag = #CardFlag#,
+      InsertDate = GetDate()
+      WHERE
+      CardID = #CardID#
+    </update>
+
+    <insert id="AddCard" parameter="Card">
+      INSERT INTO
+      CARD (CardID, CardNo, CardFlag, InsertDate)
+      VALUES
+      (#CardID#, #CardNo#, #CardFlag#, GetDate())
+    </insert>
+
+    <update id="DeleteCard" parameter="System.Int32">
+      UPDATE
+      Card
+      SET
+      DELETEFLAG = 'Y'
+      WHERE
+      CardID = #CardId#
+    </update>
+    
+      <!--Location 영역 S-->
+    <select id="GetLocationList" paramterClass="Location" resultClass="Location">
+      SELECT
+      LocationID,
+      LocationName,
+      LocationIP,
+      LocationFlag,
+      InsertDate
+      FROM
+      Location
+    </select>
+
+    <select id="GetLocation" paramterClass="Location" resultClass="Location">
+      SELECT
+      LocationName,
+      LocationIP,
+      LocationFlag,
+      InsertDate
+      FROM
+      Location
+      WHERE
+      LocationID = #LocationID#
+    </select>
+    
+     <insert id="AddLocation" paramterClass="Location">
+      INSERT INTO 
+      Location (LocationName, LocationIP, LocationFlag, InsertDate)
+      VALUES
+      (#LocationName#, #LocationIP#, #LocationFlag#, GetDate())
+    </insert>
+
+    <update id="SetLocation" paramterClass="Location">
+      UPDATE
+      Location
+      SET
+      LocationName = #LocationName#,
+      LocationIP = #LocationIP#,
+      LocationFlag = #LocationFlag#,
+      InsertDate = Getdate()
+      WHERE
+      LocationID = #LocationID#
+    </update>
+    
+    <delete id="DeleteLocation" parameterClass="System.Int32">
+    DELETE
+    FROM 
+    Location
+    WHERE
+    LocationID = #LocationID#
+    </delete>
+
+    <insert id="SetNewLocation" paramterClass="Location">
+      INSERT INTO
+      Location (LocationName, LocationIP, LocationFlag, InsertDate)
+      VALUES
+      ( #LocationName#, #LocationIP#, #LocationFlag#, GetDate())
+    </insert>
+    <!--Location 영역 E-->
+
+
+    <!--GlobalConfig 영역 S-->
+    <select id="GetGlobalConfig" paramterClass="GlobalConfig" resultClass="GlobalConfig">
+      SELECT 
+      ConfigID,
+      COnfigName,
+      ConfigValue
+      FROM
+      GlobalConfig
+      WHERE
+      ConfigName = #ConfigName#
+    </select>
+
+    <update id="SetGlobalConfig" paramterClass="GlobalConfig">
+      UPDATE
+      GlobalConfig
+      SET
+      ConfigValue = #ConfigValue#
+      WHERE
+      ConfigName = #ConfigName#
+    </update>
+    <!--GlobalConfig 영역 E-->
+    
+  
+</statements>
+</sqlMap>    

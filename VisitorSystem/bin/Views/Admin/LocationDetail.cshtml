@@ -1,0 +1,81 @@
+﻿@model VisitorSystem.Models.Location
+
+<script>
+    function LocationDelete(LocationID) {
+        if (confirm("등록된 위치 정보를 지우시겠습니까?", "위치정보 삭제"))
+            location.href = '@Url.Action("LocationDelete","Admin")?LocationID=' + LocationID;
+        else
+            return false;
+    }
+</script>
+
+
+<form action="/Admin/LocationDetail" method="post">
+    <div id="contents">
+        <div class="sub_container">
+            <div class="row">
+                <div class="col md-1">
+                    <div class="sub_heading border_b">
+                        <h2>위치 상세</h2>
+                        </div>
+                        <div class="row">
+                            <div class="md-1">
+                                <table class="view" width="100%" summary="view">
+                                    <colgroup>
+                                    <col width="35%" />
+                                    <col width="35%" />
+                                    </colgroup>
+                                    <tbody>
+                                        @Html.HiddenFor(m => m.LocationID)
+                                        @if (Model != null)
+                                        {
+                                            <tr>
+                                                <th>위치 아이디</th>
+                                                <td>@Html.DisplayFor(m => m.LocationID)</td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <th>위치 이름</th>
+                                            <td>@Html.TextBoxFor(m => m.LocationName)</td>
+                                        </tr>
+                                        <tr>
+                                            <th>위치 아이피 (255.255.255.255)</th>
+                                            <td>@Html.TextBoxFor(m => m.LocationIP)</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td style="color:red;">@ViewBag.Error</td>
+                                        </tr>
+                                        <tr>
+                                            <th>위치 동작 A : 관리자, T : 태블릿</th>
+                                            <td>@Html.TextBoxFor(m => m.LocationFlag)</td>
+                                        </tr>
+                                        @if (Model != null)
+                                        {
+                                            <tr>
+                                                <th>등록일</th>
+                                                <td>@Html.DisplayFor(m => m.InsertDate)</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <div class="btn_area view">
+                                    @if (Model != null)
+                                    {
+                                        <button class="btn-save" type="submit">수정</button>
+                                        <button class="btn-delete" onclick="LocationDelete(@Model.LocationID)">삭제</button>
+                                    }
+                                    else
+                                    {
+                                        <button class="btn-save" type="submit">저장</button>
+
+                                    }
+                                    <button class="btn-list" type="button" onclick="window.location.href='@Url.Action("LocationLIst", "Admin")'">목록</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,123 @@
+﻿@model VisitorSystem.Models.VisitorInfo
+
+@Styles.Render("~/SignPad/Css")
+@Scripts.Render("~/SignPad/Numeric")
+@Scripts.Render("~/SignPad/Bezier")
+@Scripts.Render("~/SignPad/Jq")
+@Scripts.Render("~/SignPad/Json")
+
+<script>
+    $(document).ready(function () {
+        $('#smoothed-variableStrokeWidth').signaturePad({ drawOnly: true, drawBezierCurves: true, variableStrokeWidth: true, lineTop: 120 });
+    });
+</script>
+
+
+<div id="header" style="height:150px;">
+    <h1>
+        Personal Information Collection and Use Agreement
+    </h1>
+</div><!--#header-->
+@using (Html.BeginForm("VisitorInfoAgreeENG", "tablet", FormMethod.Post, new { @style = "height:calc(100% - 230px);" }))
+{
+
+    <div id="container">
+        <div id="contents align_l">
+            <p class="top_text">We collect and provide only a minimum amount of personal information for issuing access cards to Prudential Tower visitors. </p>
+            <h2>
+                1.Personal Information Collection and Use
+            </h2>
+            <table class="privacy">
+                <colgroup>
+                    <col width="*" />
+                    <col width="20%" />
+                </colgroup>
+                <tr>
+                    <td>
+                        In accordance with relevant laws such as the Personal Information Protection Act, we intend to collect and use your personal information 
+                        for Prudential Tower visitor access card issuance and building management purposes as follows. Do you agree?
+                    </td>
+                    <td>Agree<span class="pl15">@Html.CheckBoxSimpleFor(m => m.AgreeFirst)</span></td>
+                </tr>
+            </table>
+            <ol class="pb30">
+                <li>
+                    ㆍPurpose of collecting personal information: Prudential Tower visitor access card issuance and building management
+                </li>
+                <li>
+                    ㆍList of collection and use of personal information: personal information (Name, Cellphone number)
+                </li>
+                <li class="bold">
+                    ㆍPeriod of personal information retention and use:  <span class="blue">Within 3 months</span> from the date of visitor's last visit at a place of business
+                </li>
+                <li>
+                    ㆍThe personal information that you provide will not be used for any other purpose.
+                </li>
+                <li>ㆍYou have the right to deny consent to the use of this collection and use of personal information, and you may be restricted access of Prudential Tower if you refuse to consent.</li>
+            </ol>
+
+            <h2>
+                2. Provision of personal information
+            </h2>
+            <table class="privacy">
+                <colgroup>
+                    <col width="*" />
+                    <col width="20%" />
+                </colgroup>
+                <tr>
+                    <td>
+                        In accordance with relevant laws such as the Personal Information Protection Act, we provide your personal information for Prudential Tower 
+                        visitor access card issuance and building management purposes as follows. Do you agree?
+                    </td>
+                    <td>Agree<span class="pl15">@Html.CheckBoxSimpleFor(m => m.AgreeSecond)</span></td>
+                </tr>
+            </table>
+            <ol class="pb30">
+                <li class="bold">
+                    ㆍWhere personal information is provided: S-1 Corporation, S-Tec System Corporation.
+                </li>
+                <li class="bold">
+                    ㆍPurpose of use of personal information: Prudential Tower visitor access card issuance and building management
+                </li>
+                <li>ㆍList of collection and use of personal information: personal information (Name, Cellphone number)</li>
+                <li class="bold">
+                    ㆍPeriod of personal information retention and use: <span class="blue">Within 3 months</span> from the date of visitor's last visit at a place of business
+                </li>
+                <li>
+                    ㆍThe personal information that you provide will not be used for any other purpose.
+                </li>
+                <li>
+                    ㆍYou have the right to deny consent to the use of this collection and use of personal information, and you may be restricted access of Prudential Tower if you refuse to consent.
+                </li>
+            </ol>
+            <div class="inn_footer">
+                <span class="day">
+                    <ul>
+                        <li>Registration date:   @DateTime.Now.ToShortDateString()</li>
+                        <li>Name:  @Html.DisplayFor(m => m.VisitorName)</li>
+                    </ul>
+                </span>
+                <div class="sigPad" id="smoothed-variableStrokeWidth" style="width:304px;">
+                    <div class="sig sigWrapper" style="height:auto; border:1px solid black;">
+                        <div class="typed"></div>
+                        <canvas class="pad" width="300" height="150"></canvas>
+                        <input type="hidden" name="SignPad" class="output">
+                    </div>
+                    <ul class="sigNav">
+                        <li class="clearButton"><a href="#clear">clear</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="btn_list">
+            <li><a href="@Url.Action("VisitorInfoENG", "tablet")"><img src="@Url.Content("~/Content/Images/icon/icon_prev.png")" width="60" height="60" border="0" alt=""></a></li>
+            <li><a href="@Url.Action("intro", "tablet")"><img src="@Url.Content("~/Content/Images/icon/icon_home.png")" width="60" height="60" border="0" alt=""></a></li>
+            <li><input type="image" name="submit" value="" src="@Url.Content("~/Content/Images/icon/icon_next.png")"></li>
+        </ul>
+    </div>
+}
+
+
+

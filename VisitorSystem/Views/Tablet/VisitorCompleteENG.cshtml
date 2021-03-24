@@ -1,0 +1,32 @@
+﻿<script>
+    $(document).ready(function () {
+        // Handler for .ready() called.
+        window.setTimeout(function () {
+                       location.href = "@Url.Action("intro", "tablet")"
+        }, 4000);
+    });
+</script>
+
+<div id="header">
+    <h1>
+        Visitor registration completed
+    </h1>
+</div><!--#header-->
+<div id="container_noinput">
+    <div id="contents">
+        <p class="inner_blue">
+            <span class="bold">
+                Your visit registration is completed
+            </span><br />
+            Please be sure to wear a visiting card.
+        </p>
+        <p class="inner red">
+            ※ When you leave, please return your visiting card.
+            <br />
+            You are responsible for any loss or damage to your visiting card.
+        </p>
+    </div>
+</div><!--#container-->
+<div id="footer">
+    <p>Prudential Tower</p>
+</div>

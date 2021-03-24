@@ -1,0 +1,270 @@
+﻿@model List<VisitorSystem.Models.VisitorInfo>
+
+<script>
+
+    function openAgreeWindow(VisitorHistorySeq, Language)
+    {
+        var x = window.open('@Url.Content("~/Tablet/PopupVisitorInfoAgree?VisitorHistorySeq=")' + VisitorHistorySeq, '_blank', "width =1920, height = 1080, top = 0. left=1920, fullscreen=yes");
+    }
+    function openSignatureWindow(VisitorHistorySeq)
+    {
+        var x = window.open('@Url.Content("~/Admin/PopupSignature?VisitorHistorySeq=")' + VisitorHistorySeq ,'_blank',"width =600, height = 400");
+    }
+    function openCardWindow(VisitorHistorySeq)
+    {
+        var x = window.open('@Url.Content("~/Admin/PopupCardAdd?VisitorHistorySeq=")' + VisitorHistorySeq ,'_blank',"width =600, height = 400");
+    }
+    function openExcelImportWindow()
+    {
+        var x = window.open('@Url.Content("~/Admin/PopupExcelImport")','_blank',"width =600, height = 400");
+    }
+
+    function pageMove(movePage)
+    {
+        $('#currentPage').val(movePage);
+
+        $('#search').submit();
+    }
+
+    function pageNext(totalpage) {
+        var page = $('#currentPage').val();
+        page = Number(page) + 1;
+
+        if (totalpage > page) {
+            $('#currentPage').val(page);
+
+            $('#search').submit();
+        }
+    }
+
+    function pagePrev() {
+        var page = $('#currentPage').val();
+        page = Number(page) - 1;
+        if (page > 0) {
+            $('#currentPage').val(page);
+            $('#search').submit();
+        }
+    }
+
+    function search() {
+        $('#SearchColumn').val($('#sbSearchColumn').val());
+        $('#SearchString').val($('#txtSearchString').val());
+        $('#currentPage').val(1);
+        $('#search').submit();
+    }
+
+    $(document).ready(function () {
+        if ("@ViewBag.SearchColumn" === "") {
+
+        }
+        else {
+              $("#sbSearchColumn").val("@ViewBag.SearchColumn").change();
+
+        }
+
+    });
+    
+
+</script>
+
+
+<div id="contents">
+    <div class="sub_container">
+        <div class="row">
+            <div class="col md-1">
+                <div class="sub_heading">
+                    <h2 class="mr15">금일 내방객<span> (총 @ViewBag.TotalCount 명)</span></h2>
+                        <button style="width:170px; padding:10px; font-size:14px" onclick="javascript:openExcelImportWindow()">엑셀 일괄 등록</button>
+                        <div class="search-container">
+                            <form id="search" method="get">
+                                <select id="sbSearchColumn" class="form-control form-inline">
+                                    <option value="VisitorName" selected="selected">내방객 성명</option>
+                                    <option value="HostName">접견인 성명</option>
+                                    <option value="Mobile">연락처</option>
+                                </select>
+                                <input type="hidden" id="SearchColumn" name="SearchColumn" value="@ViewBag.SearchColumn">
+                                <input type="text" id="txtSearchString" value="@ViewBag.SearchString">
+                                <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString">
+                                <button onclick="search()"><span class="icon seach"></span></button>
+                                <input type="hidden" name="currentPage" id="currentPage" value="@ViewBag.CurrentPage" />
+                            </form>
+                        </div><!-- .search-container(E) -->
+                </div><!-- .sub_heading(E) -->
+                <div class="row">
+                    <div class="md-1">
+                        <table class="list" width="100%" summary="사용자등록">
+                            <caption><span class="offsreen">사용자 등록</span></caption>
+                            <colgroup>
+                                <col width="10%" />
+                                <col width="10%" />
+                                <col width="15%" />
+                                <col width="10%" />
+                                <col width="10%" />
+                                <col width="*" />
+                                <col width="10%" />
+                                <col width="*" />
+                            </colgroup>
+                            <thead>
+                            <th scope="성명">성명</th>
+                            <th scope="회사">회사</th>
+                            <th scope="연락처">연락처</th>
+                            <th scope="접견인">접견인</th>
+                            <th scope="접견회사">접견회사</th>
+                            <th scope="개인정보동의">개인정보동의</th>
+                            <th scope="서명">서명</th>
+                            <th scope="카드등록">카드등록</th>
+                            </thead>
+                                <!--테이블 내용 부분-->
+                            <tbody>
+                                @foreach (VisitorSystem.Models.VisitorInfo visitor in Model)
+                                {
+                                    string style = string.IsNullOrEmpty(visitor.BlackList) ? "" : "color:red;";
+
+                                    <tr style="@style">
+                                        <td>@Html.DisplayFor(m => visitor.VisitorName)</td>
+                                        <td>@Html.DisplayFor(m => visitor.VisitorCompany)</td>
+                                        <td>@Html.DisplayFor(m => visitor.VisitorMobile)</td>
+                                        <td>@Html.DisplayFor(m => visitor.HostName)</td>
+                                        <td>@Html.DisplayFor(m => visitor.HostCompany)</td>
+
+                                        @if (visitor.AgreeFirstFlag == 'Y' && visitor.AgreeSecondFlag == 'Y')
+                                        {
+                                            <td><span class="badge badge-info">동의함</span></td>
+                                        }
+                                        else
+                                        {
+                                            <td><span class="badge badge-check"><a href="javascript:openAgreeWindow(@visitor.VisitorHistorySeq)">동의절차</a></span></td>
+                                        }
+
+                                        @if (!string.IsNullOrEmpty(visitor.SignPath))
+                                        {
+                                            <td><span class="badge badge-check"><a href="javascript:openSignatureWindow(@visitor.VisitorHistorySeq)">서명확인</a></span></td>
+                                        }
+                                        else
+                                        {
+                                            <td><span class="badge badge-info">서명필요</span></td>
+                                        }
+
+                                        @if (string.IsNullOrEmpty(visitor.CardID))
+                                        {
+                                            <td><span class="badge badge-check"><a href="javascript:openCardWindow(@visitor.VisitorHistorySeq)">카드발급</a></span></td>
+                                        }
+                                        else
+                                        {
+                                            <td><span class="badge badge-check">카드회수</span></td>
+                                        }
+                                    </tr>
+
+                                }
+                            </tbody>
+                        </table>
+
+                        <!--table(E)-->
+                        <div class="pageing">
+                            <ul class="page">
+
+                                @{
+                                    int pageCount = ViewBag.TotalCount / ViewBag.PagePerData +1;
+                                    <li><a href="javascript:pagePrev()"><span class="icon prev">&nbsp;</span></a></li>
+                                    for (int i = 1; i < pageCount + 1; i++)
+                                    {
+                                        if (i == ViewBag.CurrentPage)
+                                        {
+                                            <li><a href="javascript:pageMove(@i);" class="active">@i</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a href="javascript:pageMove(@i);">@i</a></li>
+                                        }
+
+                                    }
+                                    <li><a href="javascript:pageNext(@pageCount)"><span class="icon next">&nbsp;</span></a></li>
+                                }
+
+                            </ul>
+                        </div><!-- .paging(E) -->
+                    </div><!-- .md-1(E) -->
+                </div><!-- .row(E) -->
+
+            </div><!--col-->
+        </div><!--.row-->
+    </div><!-- .sub_container(E) -->
+
+    <div class="sub_container">
+        <div class="row pt30">
+            <div class="col md-2 mr30">
+                <div class="sub_heading">
+                    <h2>주요 접견인  </h2>
+                    <h4 style="padding-top:11px;"> (최근 한달내 접견 다수)</h4>
+                </div>
+                <table class="list" width="100%" summary="주요접견인">
+                    <caption><span class="offsreen">주요접견인</span></caption>
+                    <colgroup>
+                        <col width="18%" />
+                        <col width="18%" />
+                        <col width="18%" />
+                        <col width="*" />
+                        <col width="18%" />
+                    </colgroup>
+                    <thead>
+                    <th scope="번호">성명</th>
+                    <th scope="회사">회사</th>
+                    <th scope="직급">직급</th>
+                    <th scope="번호">번호</th>
+                    <th scope="내선번호">내선번호</th>
+                    </thead>
+                    <tbody>
+                        @foreach (VisitorSystem.Models.Host Host in ViewBag.Hosts)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(m => Host.HostName)</td>
+                                <td>@Html.DisplayFor(m => Host.Company)</td>
+                                <td>@Html.DisplayFor(m => Host.GradeName)</td>
+                                <td>@Html.DisplayFor(m => Host.Mobile)</td>
+                                <td>@Html.DisplayFor(m => Host.Tel)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- .col md-2(E) -->
+            <div class="col md-2">
+                <div class="sub_heading">
+                    <h2>통계</h2>
+                </div>
+                <table class="list" width="100%" summary="통계">
+                    <caption><span class="offsreen">통계</span></caption>
+                    <colgroup>
+                        <col width="*" />
+                        <col width="20%" />
+                        <col width="20%" />
+                        <col width="20%" />
+                    </colgroup>
+                    <thead>
+                    <th scope="위치">위치</th>
+                    <th scope="내방중">내방중</th>
+                    <th scope="내방완료">내방완료</th>
+                    <th scope="미회수">미회수</th>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td>메인 데스크</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>로비 동쪽</td>
+                            <td>0</td>
+                            <td>0</td>
+                            <td>0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div><!-- .col md-2(E) -->
+        </div><!-- .row(E) -->
+    </div><!-- .sub_container(E) -->
+
+
+</div><!--contents(E)-->

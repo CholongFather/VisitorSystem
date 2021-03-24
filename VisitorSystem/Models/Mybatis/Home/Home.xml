@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<sqlMap namespace="Home" xmlns=
+"http://ibatis.apache.org/mapping" xmlns:xsi=
+"http://www.w3.org/2001/XMLSchema-instance" >
+  <statements>
+    <!--Home에서 IP값으로 Location을 읽어서 어떻게 동작시키는지에 대한 매핑을 알기 위한 쿼리-->
+    <select id="GetLocationAction" parameterClass="String" resultClass="Location">
+      SELECT
+      LocationID,
+      LocationName,
+      LocationIP,
+      InsertDate,
+      LocationFlag
+      FROM 
+      Location
+      WHERE
+      LocationIP = #ipAddress#
+    </select>
+  </statements>
+</sqlMap>    

@@ -1,0 +1,29 @@
+﻿<script>
+    $(document).ready(function () {
+        // Handler for .ready() called.
+        window.setTimeout(function () {
+                       location.href = "@Url.Action("intro", "tablet")"
+        }, 4000);
+    });
+</script>
+
+<div id="header">
+    <h1>
+        방문자 등록 완료
+    </h1>
+</div><!--#header-->
+<div id="container_noinput">
+    <div id="contents">
+        <p class="inner_blue">
+            <span class="bold">방문 등록이 완료 되었습니다.</span><br />
+            방문증은 반드시 패용하여 주시기 바랍니다.
+        </p>
+        <p class="inner red">
+            ※ 퇴실 시에는 지급 받은 방문증을 반납하여 주시기 바랍니다.<br />
+            방문증 분실 또는 파손시에는 그에 대한 책임이 있습니다.
+        </p>
+    </div>
+</div><!--#container-->
+<div id="footer">
+    <p>Prudential Tower</p>
+</div>

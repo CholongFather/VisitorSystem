@@ -1,0 +1,27 @@
+﻿@using System.Web.Optimization
+
+<!DOCTYPE html>
+<html>
+<head>
+    <!--기본 Layout 여기서는 사용하지 않음-->
+    <link rel="icon" href="@Url.Content("~/content/favicon.ico")" />
+    <title>@ViewBag.Title</title>
+    <meta charset="utf-8">
+    @Styles.Render("~/Content/Css")
+    @Scripts.Render("~/Script/js")
+    @Scripts.Render("~/Script/JsMigrate")
+    @RenderSection("scripts", required: false)
+</head>
+<body>
+    <div id="header" style="text-align:left">
+        마스터 _Layout Header
+    </div>
+
+    @RenderBody()
+
+
+    <div id="footer" style="text-align:left">
+        마스터 _Layout Footer
+    </div>
+</body>
+</html>

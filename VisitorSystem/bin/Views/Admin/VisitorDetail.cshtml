@@ -1,0 +1,80 @@
+﻿@model VisitorSystem.Models.Visitor
+
+<h2>관리자 웹입니다.</h2>
+
+확실히 여기가 메인입니다.
+<br />
+<script>
+    function VisitorDelete(VisitorID) {
+        if (confirm("등록된 내방객 정보를 지우시겠습니까?"))
+            location.href = '@Url.Action("VisitorDelete", "Admin")?VisitorID=' + VisitorID;
+        else
+            return false;
+    }
+</script>
+
+
+<form action="/Admin/VisitorDetail" method="post">
+    <div id="contents">
+        <div class="sub_container">
+            <div class="row">
+                <div class="col md-1">
+                    <div class="sub_heading border_b">
+                        <h2>내방객 상세</h2>
+                    </div>
+                    <div class="row">
+                        <div class="md-1">
+                            <table class="view" width="100%" summary="view">
+                                <colgroup>
+                                <col width="35%" />
+                                <col width="35%" />
+                                </colgroup>
+                                <tbody>
+                                    @Html.HiddenFor(m => m.VisitorID)
+                                    <tr>
+                                        <th>내방객 이름</th>
+                                        <td>@Html.TextBoxFor(m => m.VisitorName)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>내방객 회사</th>
+                                        <td>@Html.TextBoxFor(m => m.Company)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>연락처</th>
+                                        <td>@Html.TextBoxFor(m => m.Mobile)</td>
+                                    </tr>
+                                    @if (Model != null)
+                                    {
+                                    <tr>
+                                        <th>마지막 내방 일자</th>
+                                        <td>@Html.TextBoxFor(m => m.LastVisitDate)</td>
+                                    </tr>
+                                    }
+                                    else
+                                    {
+                                    <tr>
+                                        <th>마지막 내방 일자</th>
+                                        <td>없음</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="btn_area view">
+                                <button class="btn-list" onclick="location.href='@Url.Action("VisitorList", "Admin")'">목록</button>
+                                @if (Model != null)
+                                {
+                                    <button class="btn-delete" onclick="javascipt:VisitorDelete(@Model.VisitorID)">삭제</button>
+                                    <button class="btn-save" type="submit">수정</button>
+                                }
+                                else
+                                {
+                                    <button class="btn-save" type="submit">저장</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

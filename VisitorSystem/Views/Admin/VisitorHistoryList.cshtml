@@ -1,0 +1,167 @@
+﻿@model List<VisitorSystem.Models.VisitorInfo>
+
+<script>
+
+    function openSignatureWindow(VisitorHistorySeq)
+    {
+        var x = window.open('@Url.Content("~/Admin/PopupSignature?VisitorHistorySeq=")' + VisitorHistorySeq ,'_blank',"width =600, height = 400");
+    }
+
+</script>
+
+<div id="contents">
+    <div class="sub_container">
+        <div class="row">
+            <div class="col md-1">
+                <div class="sub_heading">
+                    <h2 class="mr15">내방 이력 조회</h2>
+                    <div class="search-container">
+                        <form id="search" method="get">
+                            <select id="sbSearchColumn" class="form-control form-inline">
+                                <option value="VisitorName" selected="selected">성명</option>
+                                <option value="Company">회사</option>
+                                <option value="Mobile">연락처</option>
+                                <option value="Host">접견인</option>
+                            </select>
+                            <input type="hidden" id="SearchColumn" name="SearchColumn" value="@ViewBag.SearchColumn">
+                            <input type="text" id="txtSearchString" value="@ViewBag.SearchString">
+                            <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString">
+                            <button onclick="search()"><span class="icon seach"></span></button>
+                            <input type="hidden" name="currentPage" id="currentPage" value="@ViewBag.CurrentPage" />
+                        </form>
+                    </div><!-- .search-container(E) -->
+                </div><!-- .sub_heading(E) -->
+                <div class="row">
+                    <div class="md-1">
+                        <table class="list" width="100%" summary="내방 이력 조회">
+                            <caption><span class="offsreen">내방 이력 조회</span></caption>
+                            <colgroup>
+                                <col width="10%" />
+                                <col width="15%" />
+                                <col width="10%" />
+                                <col width="10%" />
+                                <col width="15%" />
+                                <col width="10%" />
+                                <col width="10%" />
+                                <col width="10%" />
+                                <col width="10%" />
+                                <col width="10%" />
+                            </colgroup>
+                            <thead>
+                            <th scope="성명">성명</th>
+                            <th scope="회사">회사</th>
+                            <th scope="연락처">연락처</th>
+                            <th scope="접견인">접견인</th>
+                            <th scope="방문회사">방문회사</th>
+                            <th scope="내방일자">내방일자</th>
+                            <th scope="개인정보동의">개인정보동의</th>
+                            <th scope="접견회사">서명</th>
+                            <th scope="카드처리">카드처리</th>
+                            <th scope="전달사항">전달사항</th>
+                            </thead>
+                                <!--테이블 내용 부분-->
+                            <tbody>
+                                @foreach (VisitorSystem.Models.VisitorInfo visitor in Model)
+                                {
+                                    string style = string.IsNullOrEmpty(visitor.BlackList) ? "" : "color:red !important;";
+
+                                    <tr style="@style">
+                                        <td>@Html.ActionLink(visitor.VisitorName, "VisitorHistoryDetail", new { VisitorHistorySeq = visitor.VisitorHistorySeq }, new { @class = "link", @style = style })</td>
+                                        <td>@Html.DisplayFor(m => visitor.VisitorCompany)</td>
+                                        <td>@Html.DisplayFor(m => visitor.VisitorMobile)</td>
+                                        @if (!string.IsNullOrEmpty(visitor.HostName))
+                                        {
+                                            <td>@Html.ActionLink(visitor.HostName, "HostDetail", new { HostID = visitor.HostID }, new { @class = "link", @style = style })</td>
+                                        }
+                                        else
+                                        {
+                                            <td>없음</td>
+                                        }
+
+                                        <td>@Html.DisplayFor(m => visitor.HostCompany)</td>
+
+                                        @if (visitor.VisitDateTime != null)
+                                        {
+
+                                            string Time = visitor.VisitDateTime.ToString("yyyy-MM-dd");
+                                            <td>@Time</td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+
+
+                                        @if (visitor.AgreeFirstFlag == 'Y' && visitor.AgreeSecondFlag == 'Y')
+                                        {
+                                            <td><span class="badge badge-info ">동의함</span></td>
+                                        }
+                                        else
+                                        {
+                                            <td><span class="badge badge-no ">동의하지 않음</span></td>
+                                        }
+
+                                        @if (!string.IsNullOrEmpty(visitor.SignPath))
+                                        {
+                                            <td><span class="badge badge-check"><a style="color:white;" href="javascript:openSignatureWindow(@visitor.VisitorHistorySeq)">서명확인</a></span></td>
+                                        }
+                                        else
+                                        {
+                                            <td><span class="badge badge-info ">서명 없음</span></td>
+                                        }
+
+                                        @if (string.IsNullOrEmpty(visitor.CardID))
+                                        {
+                                            <td><span class="badge badge-info">발급 안함</span></td>
+                                        }
+                                        else
+                                        {
+                                            <td><span class="badge badge-check">회수</span></td>
+                                        }
+                                        @if (string.IsNullOrEmpty(visitor.VisitorDesc))
+                                        {
+                                            <td><span class="badge badge-info">없음</span></td>
+                                        }
+                                        else
+                                        {
+                                            <td><span class="badge badge-check">전달사항</span></td>
+                                        }
+                                        <td></td>
+                                    </tr>
+
+
+                                }
+                            </tbody>
+                        </table>
+
+                        <!--table(E)-->
+                        <div class="pageing">
+                            <ul class="page">
+
+                                @{
+                                    int pageCount = ViewBag.TotalCount / ViewBag.PagePerData + 1;
+                                    <li><a href="javascript:pagePrev()"><span class="icon prev">&nbsp;</span></a></li>
+                                    for (int i = 1; i < pageCount + 1; i++)
+                                    {
+                                        if (i == ViewBag.CurrentPage)
+                                        {
+                                            <li><a href="javascript:pageMove(@i);" class="active">@i</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a href="javascript:pageMove(@i);">@i</a></li>
+                                        }
+
+                                    }
+                                    <li><a href="javascript:pageNext(@pageCount)"><span class="icon next">&nbsp;</span></a></li>
+                                }
+
+                            </ul>
+                        </div><!-- .paging(E) -->
+                    </div><!-- .md-1(E) -->
+                </div><!-- .row(E) -->
+
+            </div><!--col-->
+        </div><!--.row-->
+    </div><!-- .sub_container(E) -->
+</div><!--contents(E)-->

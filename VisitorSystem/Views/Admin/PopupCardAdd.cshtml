@@ -1,0 +1,59 @@
+﻿
+@Styles.Render("~/SignPad/Css")
+@Scripts.Render("~/SignPad/Numeric")
+@Scripts.Render("~/SignPad/Bezier")
+@Scripts.Render("~/SignPad/Jq")
+@Scripts.Render("~/SignPad/Json")
+
+
+<script type="text/javascript">
+    var CardConnected = 0;
+    var CardIssue = 0;
+
+    function CallMethod() {
+        try {
+            MSCOMM.CardConnected();
+            //OXC 변경
+            alert("연결 시도 중...");
+        }
+        catch (e) {
+            alert("연결에러" + e);
+
+        }
+    }
+
+    function CallMethodDisconnect() {
+        if (CardConnected == 1) {
+            CardConnected = 0;
+        }
+    }
+
+    if ("@ViewBag.Process" == "E") {
+        opener.location.reload();
+        window.close();
+    }
+</script>
+
+
+
+@*<script language="JavaScript" for="MSCOMM" event="ReaderConnect()">
+    CardConnected = 1;
+    alert("연결 완료!");
+</script>
+<script language="JavaScript" for="MSCOMM" event="CardNoEvent(pVarCardNo)">
+    CardConnected = 1;
+    alert(pVarCardNo);
+    $("#cardNo").value = pVarCardNo
+</script>*@
+<br />
+
+@*<object id="MSCOMM" width="1" height="1" classid="CLSID:648a5603-2c6e-101b-82b6-000000000014"></object>*@
+
+
+@using (Html.BeginForm("PopupCardAdd", "Admin", FormMethod.Post))
+{
+    <input type="hidden" value="@ViewBag.VisitorHistorySeq" name="VisitorHistorySeq" />
+    <input type="text" value="" id="cardNo" name="cardNo" />
+    <input type="button" onclick="CallMethod()" value="단말기 연결" />
+    <input type="submit" value="발급" />
+}

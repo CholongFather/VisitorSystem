@@ -1,0 +1,40 @@
+﻿@model VisitorSystem.Models.VisitorInfo
+
+@Styles.Render("~/SignPad/Css")
+@Scripts.Render("~/SignPad/Numeric")
+@Scripts.Render("~/SignPad/Bezier")
+@Scripts.Render("~/SignPad/Jq")
+@Scripts.Render("~/SignPad/Json")
+
+<script type="text/javascript">
+            var sig = '@Html.Raw(ViewBag.Sig)';
+
+            $(document).ready(function () {
+                $('#smoothed-variableStrokeWidth').signaturePad({ displayOnly: true }).regenerate(sig);
+            });
+</script>
+
+<div class="heading">
+    <h2 style="padding-left:30px">서명 정보 확인</h2>
+</div><!--.heading(E)-->
+<div class="sub_container">
+    <div>
+        <p>서명자 : @Html.DisplayFor(m => m.VisitorName)</p>
+        <p>개인정보 동의일자 : @Html.DisplayFor(m => m.VisitDateTime)</p>
+
+        <p>서명란 :</p>
+        <div class="sigPad" id="smoothed-variableStrokeWidth" style="width:304px;border:1px solid black;">
+            <div class="sig sigWrapper" style="height:auto;">
+                <div class="typed"></div>
+                <canvas class="pad" width="300" height="150"></canvas>
+                <input type="hidden" name="SignPad" class="output">
+            </div>
+            <ul class="sigNav">
+                <li class="clearButton"><a href="#clear">지우기</a></li>
+            </ul>
+        </div>
+        <div class="btn_area center">
+            <button class="btn badge-info mr10" onclick="javascript:window.close()">닫기</button>
+        </div>
+    </div>
+</div><!-- .sub_container(E) -->

@@ -1,0 +1,49 @@
+﻿@{var action = HttpContext.Current.Request.RequestContext.RouteData.Values["Action"].ToString().ToLower(); }
+
+<script>
+    //제이쿼리로 액션 이름 보고. 내방등록 active 줄려고 파티셜에 Script 렌더링
+    var action = '@action';
+
+    $(document).ready(function () {
+        if (action.indexOf("visitorhistoryadd") != -1) {
+            $('#VisitorHistoryAddLink').attr('class', 'active');
+        }
+        else if (action.indexOf("visitorhistory") != -1) {
+            $('#VisitorHistoryLink').attr('class', 'active');
+        }
+        else if (action.indexOf("visitorblacklist") != -1) {
+            $('#VisitorBlackListLink').attr('class', 'active');
+        }
+        else if (action.indexOf("visitor") != -1) {
+            $('#VisitorLink').attr('class', 'active');
+        }
+        else if (action.indexOf("host") != -1) {
+            $('#HostLink').attr('class', 'active');
+        }
+        else if (action.indexOf("card") != -1) {
+            $('#CardLink').attr('class', 'active');
+        }
+        else if (action.indexOf("location") != -1) {
+            $('#LocationLink').attr('class', 'active');
+        }
+        else if (action.indexOf("admin") != -1) {
+            $('#AdminLink').attr('class', 'active');
+        }
+    });
+
+</script>
+
+<!-- .sidebar(S) -->
+<div id="sidebar">
+    <ul class="gnb">
+        <li><a id="VisitorHistoryAddLink" href="./VisitorHistoryAdd"><span class="nav3"></span>내방 등록</a></li>
+        <li><a id="VisitorHistoryLink" href="./VisitorHistoryList"><span class="nav1"></span>내방이력 조회</a></li>
+        <li><a id="VisitorLink" href="./VisitorList"><span class="nav2"></span>내방객 관리</a></li>
+        <li><a id="HostLink" href="./HostList"><span class="nav2"></span>접견인 관리</a></li>
+        <li><a id="CardLink" href="./CardList"><span class="nav3"></span>카드 관리</a></li>
+        <li><a id="VisitorBlackListLink" href="./VisitorBlackList"><span class="nav5"></span>블랙 리스트</a></li>
+        <li><a id="LocationLink" href="./LocationList"><span class="nav4"></span>위치 관리</a></li>
+        <!--<li><a id="AdminLink" href="./AdminList"><span class="nav2"></span>사용자 등록</a></li>-->
+        <li><a href="./LogOut"><span class="nav6"></span>로그아웃</a></li>
+    </ul><!-- .gnb(E) -->
+</div><!-- .sidebar(E) -->

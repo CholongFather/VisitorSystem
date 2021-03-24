@@ -1,0 +1,105 @@
+﻿@model VisitorSystem.Models.VisitorInfo
+
+<script type="text/javascript">
+    function SendSmS() {
+        $('#AuthProcess').html("Process....");
+        $.ajax({
+            url: "/Tablet/SendSMS",
+            type: "get",
+            data: { VisitorMobile: $('#VisitorMobile').val() },
+            dataType: "Json",
+            success: function (response, textStatus, jqXHR) {
+                if (response.AuthNumber) {
+                    //Auth넘버 보낸 경우 Hidden Html에 세팅해서 서버에서 비교하게 끔 만듬.
+                    $("#AuthSendNumber").val(response.AuthNumber);
+                    $('#AuthProcess').html("AuthNumber Send");
+                }
+            },
+            //에러시 동작할 Function 정의 Alert 창 하나 띄워서 SMS 진행 안되는 거 알려줌
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("SMS Service Error");
+            },
+            //해당 Ajax가 완료되면 해줄 Function 따로 없어서 만들지 않음
+            complete: function () {
+            }
+        });
+
+    };
+
+    function ReSendSmS() {
+        $('#AuthProcess').html("ReSend Process....");
+        $.ajax({
+            url: "/Tablet/SendSMS",
+            type: "get",
+            data: { VisitorMobile: $('#VisitorMobile').val() },
+            dataType: "Json",
+            success: function (response, textStatus, jqXHR) {
+                if (response.AuthNumber) {
+                    //Auth넘버 보낸 경우 Hidden Html에 세팅해서 서버에서 비교하게 끔 만듬.
+                    $("#AuthSendNumber").val(response.AuthNumber);
+                    $('#AuthProcess').html("AuthNumber ReSend");
+                }
+            },
+            //에러시 동작할 Function 정의 Alert 창 하나 띄워서 SMS 진행 안되는 거 알려줌
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("SMS Service Error");
+            },
+            //해당 Ajax가 완료되면 해줄 Function 따로 없어서 만들지 않음
+            complete: function () {
+            }
+        });
+
+    };
+
+</script>
+
+
+@using (Html.BeginForm("VisitorSmsAuthENG", "tablet", FormMethod.Post))
+{
+
+    <div id="header">
+        <h1>
+            Visitor phone number verification
+        </h1>
+    </div><!--#header-->
+    <div id="container">
+        <div id="contents">
+            <p class="pb20 ">
+                After requesting the authentication of mobile phone number,
+                enter the authentication number you received and press the "Next" button.
+            </p>
+            <div class="input-cont">
+                <div class="input-container" style="width:50%;margin-left:100px">
+                    <span class="input_tit_long" style="width:180px;">Cellphone number</span>
+                @Html.TextBoxFor(m => m.VisitorMobile, new { placeholder = "010-1234-5678", @class = "form_input", @Style = "Width:40%;", @readonly = "readonly" })
+                <span type="button" onclick="SendSmS()"  style="width:200px;cursor:pointer;" id="SendSms" name="SendSms" value="Request authentication" class="input_tit flpat_l">Request authentication</span>
+                </div><!--.input-container(E)-->
+                <div class="input-container" style="width:40%">
+                    <span class="input_tit_long" style="width:200px;">Authentication number</span>@Html.TextBoxFor(m => m.AuthNumber, new { placeholder = "Please enter your verification number", @class = "form_input", @Style = "Width:40%;" })
+                </div><!--.input-container(E)-->
+            </div>	<!--.input-cont(E)-->
+            <div class="pt100">
+                <p id="AuthProcess" style="color:red; margin: 10px;"></p>
+                <p>
+                    If you do not receive the authentication number,
+                    please click the redial button of authentication number.
+                </p>
+                <div class="btn_area ">
+                    <input type="hidden" id="AuthSendNumber" name="AuthSendNumber">
+                    <button class="btn" type="button" onclick="ReSendSmS()" style="padding:10px;" id="SendSmsRetry" name="SendSms">Authorization number re-request</button>
+                </div><!--.btn_area-->
+
+                <p class="red">If your mobile phone is not certified, you may be restricted from accessing.</p>
+                <p class="blue">If you do not have a cell phone or are not certified, please contact your desk.</p>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="btn_list">
+            <li><a href="@Url.Action("VisitorInfoAgreeENG", "tablet")"><img src="@Url.Content("~/Content/Images/icon/icon_prev.png")" width="60" height="60" border="0" alt=""></a></li>
+            <li><a href="@Url.Action("intro", "tablet")"><img src="@Url.Content("~/Content/Images/icon/icon_home.png")" width="60" height="60" border="0" alt=""></a></li>
+            <li><input type="image" name="submit" value="" src="@Url.Content("~/Content/Images/icon/icon_next.png")"></li>
+        </ul>
+    </div>
+
+}

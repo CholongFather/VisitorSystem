@@ -1,0 +1,92 @@
+﻿@model List<VisitorSystem.Models.VisitorBlackList>
+
+<div id="contents">
+    <div class="sub_container">
+        <div class="row">
+            <div class="col md-1">
+                <div class="sub_heading">
+                    <h2 class="mr15">블랙 리스트 관리</h2>
+                    <div class="search-container">
+                        <form id="search" method="get">
+                            <select id="sbSearchColumn" class="form-control form-inline">
+                                <option value="VisitorName" selected="selected">성명</option>
+                                <option value="Company">회사</option>
+                                <option value="Mobile">연락처</option>
+                            </select>
+                            <input type="hidden" id="SearchColumn" name="SearchColumn" value="@ViewBag.SearchColumn">
+                            <input type="text" id="txtSearchString" value="@ViewBag.SearchString">
+                            <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString">
+                            <button onclick="search()"><span class="icon seach"></span></button>
+                            <input type="hidden" name="currentPage" id="currentPage" value="@ViewBag.CurrentPage" />
+                        </form>
+                    </div><!-- .search-container(E) -->
+                </div><!-- .sub_heading(E) -->
+                <div class="row">
+                    <div class="md-1">
+                        <table class="list" width="100%" summary="블랙 리스트">
+                            <caption><span class="offsreen">블랙 리스트</span></caption>
+                            <colgroup>
+                                <col width="20%" />
+                                <col width="20%" />
+                                <col width="20%" />
+                                <col width="20%" />
+                                <col width="*" />
+                            </colgroup>
+                            <thead>
+                            <th scope="성명">성명</th>
+                            <th scope="회사">회사</th>
+                            <th scope="연락처">연락처</th>
+                            <th scope="등록일">등록일</th>
+                            <th scope="등록사유">등록사유</th>
+                            </thead>
+                                <!--테이블 내용 부분-->
+                            <tbody>
+                                @foreach (VisitorSystem.Models.VisitorBlackList blackList in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.ActionLink(blackList.VisitorName, "VisitorBlackListDetail", new { VisitorID = blackList.VisitorID }, new { @class = "link" })</td>
+                                        <td>@blackList.Company</td>
+                                        <td>@blackList.Mobile</td>
+                                        <td>@blackList.InsertDate</td>
+                                        <td>@Html.DisplayFor(m => blackList.Desc)</td>
+                                    </tr>
+                                }
+                                @if (Model.Count == 0)
+                                {
+                                    <tr><td colspan="5">검색된 정보가 없습니다.</td></tr>
+                                }
+                            </tbody>
+                        </table>
+                        <!--table(E)-->
+                        <div class="pageing">
+                            <ul class="page">
+
+                                @{
+                                    int pageCount = ViewBag.TotalCount / ViewBag.PagePerData + 1;
+                                    <li><a href="javascript:pagePrev()"><span class="icon prev">&nbsp;</span></a></li>
+                                    for (int i = 1; i < pageCount + 1; i++)
+                                    {
+                                        if (i == ViewBag.CurrentPage)
+                                        {
+                                            <li><a href="javascript:pageMove(@i);" class="active">@i</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a href="javascript:pageMove(@i);">@i</a></li>
+                                        }
+
+                                    }
+                                    <li><a href="javascript:pageNext(@pageCount)"><span class="icon next">&nbsp;</span></a></li>
+                                }
+
+                            </ul>
+                        </div><!-- .paging(E) -->
+                    </div><!-- .md-1(E) -->
+                </div><!-- .row(E) -->
+
+            </div><!--col-->
+        </div><!--.row-->
+    </div><!-- .sub_container(E) -->
+</div><!--contents(E)-->
+
+

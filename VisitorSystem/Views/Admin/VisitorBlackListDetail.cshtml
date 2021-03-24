@@ -1,0 +1,76 @@
+﻿@model VisitorSystem.Models.VisitorBlackList
+<script>
+    function BlackListDelete(VisitorID) {
+        if (confirm("등록된 블랙 리스트를 지우시겠습니까?"))
+            location.href = '@Url.Action("VisitorBlackListDelete", "Admin")?VisitorID=' + VisitorID;
+        else
+            return false;
+    }
+</script>
+
+<form action="/Admin/VisitorBlackListDetail" method="post">
+    <div id="contents">
+        <div class="sub_container">
+            <div class="row">
+                <div class="col md-1">
+                    <div class="sub_heading border_b">
+                        <h2>블랙리스트 상세</h2>
+                    </div>
+                    <div class="row">
+                        <div class="md-1">
+                            <table class="view" width="100%" summary="view">
+                                <col width="35%" />
+                                <col width="35%" />
+                                </colgroup>
+                                <tbody>
+                                    @Html.HiddenFor(m => m.VisitorID)
+                                    <tr>
+                                        <th>성명</th>
+                                        <td>@Html.DisplayFor(m => m.VisitorName)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>회사</th>
+                                        <td>@Html.DisplayFor(m => m.Company)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>등록자</th>
+                                        <td>@Html.DisplayFor(m => m.AdminID)</td>
+                                    </tr>
+                                    </tr>
+                                    @if (Model != null)
+                                    {
+                                        <tr>
+                                            <th>등록일</th>
+                                            <td>@Html.DisplayFor(m => m.InsertDate)</td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <th class="pt30">블랙리스트 사유</th>
+                                        <td colspan="3">
+                                            <textarea name="desc">@Model.Desc</textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="btn_area view">
+
+                                @if (Model != null)
+                                {
+                                    <button class="btn-save" type="submit">수정</button>
+                                    <button class="btn-delete" onclick="javascipt:BlackListDelete(@Model.VisitorID)">삭제</button>
+                                }
+                                else
+                                {
+                                    <button class="btn-save" type="submit">등록</button>
+                                }
+
+                                <button class="btn-list" type="button" onclick="location.href='@Url.Action("VisitorBlackLIst", "Admin")'">목록</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+

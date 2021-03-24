@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<sqlMap namespace="alias" xmlns=
+"http://ibatis.apache.org/mapping" xmlns:xsi=
+"http://www.w3.org/2001/XMLSchema-instance" >
+  <!--Model과 Mybatis에서 사용하는 모델이름 매칭하는 부분-->
+  <alias>
+    <typeAlias alias="VisitorInfo" type="VisitorSystem.Models.VisitorInfo" />
+    <typeAlias alias="Visitor" type="VisitorSystem.Models.Visitor" />
+    <typeAlias alias="VisitorBlackList" type="VisitorSystem.Models.VisitorBlackList" />
+    <typeAlias alias="AdminUser" type="VisitorSystem.Models.AdminUser" />
+    <typeAlias alias="Host" type="VisitorSystem.Models.Host" />
+    <typeAlias alias="Card" type="VisitorSystem.Models.Card" />
+    <typeAlias alias="GlobalConfig" type="VisitorSystem.Models.GlobalConfig" />
+    <typeAlias alias="AdminLog" type="VisitorSystem.Models.AdminLog" />
+    <typeAlias alias="Location" type="VisitorSystem.Models.Location" />
+  </alias>
+</sqlMap>

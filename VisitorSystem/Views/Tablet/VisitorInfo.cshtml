@@ -1,0 +1,45 @@
+﻿@model VisitorSystem.Models.VisitorInfo
+
+
+<div id="header">
+    <h1>
+        방문자 정보 입력
+    </h1>
+</div><!--#header-->
+@using (Html.BeginForm("VisitorInfo", "tablet", FormMethod.Post))
+{
+    <div id="container">
+        <div id="contents">
+            <div class="row">
+                <div class="input-cont">
+                    <div class="input-container">
+                        <h2>1) 방문자 정보</h2>
+                        <ul>
+                            <li><span class="input_tit">성명</span>@Html.TextBoxFor(m => m.VisitorName, new { placeholder = "성명을 입력해주세요", @class = "form_input" })</li>
+                            <li><span class="input_tit">연락처</span>@Html.TextBoxFor(m => m.VisitorMobile, new { placeholder = "휴대폰 번호를 입력해주세요", @class = "form_input" })</li>
+                            <li><span class="input_tit">회사명</span>@Html.TextBoxFor(m => m.VisitorCompany, new { placeholder = "방문자 본인의 회사명을 입력해주세요", @class = "form_input" })</li>
+                        </ul>
+                    </div>
+                    <div class="input-container">
+                        <h2>2) 접견자 정보</h2>
+                        <ul>
+                            <li><span class="input_tit">회사명</span>@Html.TextBoxFor(m => m.HostCompany, new { placeholder = "방문하신 회사명을 입력해주세요", @class = "form_input" })</li>
+                            <li><span class="input_tit">접견인</span>@Html.TextBoxFor(m => m.HostName, new { placeholder = "접견자 성명을 입력해주세요", @class = "form_input" })</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <p class="red">@Html.ViewBag.Error</p>
+        </div><!-- .search-container(E) -->
+    </div>
+
+    <div id="footer">
+        <ul class="btn_list">
+            <li><a href="@Url.Action("intro", "tablet")"><img src="@Url.Content("~/Content/Images/icon/icon_prev.png")" width="60" height="60" border="0" alt=""></a></li>
+            <li><a href="@Url.Action("intro", "tablet")"><img src="@Url.Content("~/Content/Images/icon/icon_home.png")" width="60" height="60" border="0" alt=""></a></li>
+            <li><input type="image" name="submit" value="" src="@Url.Content("~/Content/Images/icon/icon_next.png")"></li>
+        </ul>
+    </div>
+}
+

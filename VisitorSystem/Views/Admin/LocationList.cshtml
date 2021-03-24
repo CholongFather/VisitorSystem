@@ -1,0 +1,93 @@
+﻿@model List<VisitorSystem.Models.Location>
+
+<script>
+    function AddLocation() {
+        location.href = '@Url.Action("locationDetail", "Admin", new { LocationID = 0 })';
+    }
+</script>
+
+<div id="contents">
+    <div class="sub_container">
+        <div class="row">
+            <div class="col md-1">
+                <div class="sub_heading">
+                    <h2 class="mr15">위치 관리</h2>
+                    <button class="btn-top" onclick="AddLocation()">위치 등록</button>
+                    <div class="search-container">
+                        <form id="search" method="get">
+                            <select id="sbSearchColumn" class="form-control form-inline">
+                                <option value="LocationName" selected="selected">위치 이름</option>
+                                <option value="LocationIP">위치 IP</option>
+                            </select>
+                            <input type="hidden" id="SearchColumn" name="SearchColumn" value="@ViewBag.SearchColumn">
+                            <input type="text" id="txtSearchString" value="@ViewBag.SearchString">
+                            <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString">
+                            <button onclick="search()"><span class="icon seach"></span></button>
+                            <input type="hidden" name="currentPage" id="currentPage" value="@ViewBag.CurrentPage" />
+                        </form>
+                    </div><!-- .search-container(E) -->
+                </div><!-- .sub_heading(E) -->
+                <div class="row">
+                    <div class="md-1">
+                        <table class="list" width="100%" summary="위치 등록">
+                            <caption><span class="offsreen">위치 등록</span></caption>
+                            <colgroup>
+                                <col width="25%" />
+                                <col width="25%" />
+                                <col width="25%" />
+                                <col width="*" />
+                            </colgroup>
+                            <thead>
+                            <th scope="위치이름">위치 이름</th>
+                            <th scope="위치IP">위치 IP</th>
+                            <th scope="등록일">등록일</th>
+                            <th scope="위치구분">위치 구분</th>
+                            </thead>
+                            <!--테이블 내용 부분-->
+                            <tbody>
+                                @foreach (VisitorSystem.Models.Location location in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.ActionLink(location.LocationName, "locationDetail", new { LocationID = location.LocationID }, new { @class = "link" })</td>
+                                        <td>@location.LocationIP</td>
+                                        <td>@location.InsertDate</td>
+                                        @{
+                                            string LocationFlag = location.LocationFlag == 'A' ? "관리자" : "태블릿";
+                                        }
+                                        <td>@LocationFlag (@location.LocationFlag)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <!--table(E)-->
+                        <div class="pageing">
+                            <ul class="page">
+
+                                @{
+                                    int pageCount = ViewBag.TotalCount / ViewBag.PagePerData + 1;
+                                    <li><a href="javascript:pagePrev()"><span class="icon prev">&nbsp;</span></a></li>
+                                    for (int i = 1; i < pageCount + 1; i++)
+                                    {
+                                        if (i == ViewBag.CurrentPage)
+                                        {
+                                            <li><a href="javascript:pageMove(@i);" class="active">@i</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a href="javascript:pageMove(@i);">@i</a></li>
+                                        }
+
+                                    }
+                                    <li><a href="javascript:pageNext(@pageCount)"><span class="icon next">&nbsp;</span></a></li>
+                                }
+
+                            </ul>
+                        </div><!-- .paging(E) -->
+                    </div><!-- .md-1(E) -->
+                </div><!-- .row(E) -->
+
+            </div><!-- .col md-1(E) -->
+        </div><!-- .row(E) -->
+    </div>
+
+</div><!--contents(E)-->

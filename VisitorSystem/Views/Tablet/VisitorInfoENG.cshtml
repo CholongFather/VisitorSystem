@@ -1,0 +1,46 @@
+﻿@model VisitorSystem.Models.VisitorInfo
+
+
+<div id="header">
+    <h1>
+        Enter visitor's information
+
+    </h1>
+</div><!--#header-->
+@using (Html.BeginForm("VisitorInfoENG", "tablet", FormMethod.Post))
+{
+    <div id="container">
+        <div id="contents">
+            <div class="row">
+                <div class="input-cont">
+                    <div class="input-container">
+                        <h2>1)  Visitor’s information</h2>
+                        <ul>
+                            <li><span class="input_tit_long">Name</span>@Html.TextBoxFor(m => m.VisitorName, new { placeholder = "Enter your full name", @class = "form_input" })</li>
+                            <li><span class="input_tit_long">Contact</span>@Html.TextBoxFor(m => m.VisitorMobile, new { placeholder = "Enter your cellphone number", @class = "form_input" })</li>
+                            <li><span class="input_tit_long">Company Name</span>@Html.TextBoxFor(m => m.VisitorCompany, new { placeholder = "Enter your company name", @class = "form_input" })</li>
+                        </ul>
+                    </div>
+                    <div class="input-container">
+                        <h2>2) Host information</h2>
+                        <ul>
+                            <li><span class="input_tit_long">Company Name</span>@Html.TextBoxFor(m => m.HostCompany, new { placeholder = "Enter the company name that you visit", @class = "form_input" })</li>
+                            <li><span class="input_tit_long">Host</span>@Html.TextBoxFor(m => m.HostName, new { placeholder = "Enter host name", @class = "form_input" })</li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <p class="red">@Html.ViewBag.Error</p>
+        </div><!-- .search-container(E) -->
+    </div>
+
+    <div id="footer">
+        <ul class="btn_list">
+            <li><a href="@Url.Action("intro", "tablet")"><img src="@Url.Content("~/Content/Images/icon/icon_prev.png")" width="60" height="60" border="0" alt=""></a></li>
+            <li><a href="@Url.Action("intro", "tablet")"><img src="@Url.Content("~/Content/Images/icon/icon_home.png")" width="60" height="60" border="0" alt=""></a></li>
+            <li><input type="image" name="submit" value="" src="@Url.Content("~/Content/Images/icon/icon_next.png")"></li>
+        </ul>
+    </div>
+}
+

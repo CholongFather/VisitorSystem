@@ -1,0 +1,69 @@
+﻿@model VisitorSystem.Models.Host
+<script>
+    function HostDelete(HostID) {
+        if (confirm("등록된 접견인 정보를 지우시겠습니까?"))
+            location.href = '@Url.Action("HostDelete","Admin")?HostID=' + HostID;
+        else
+            return false;
+    }
+</script>
+
+<form action="/Admin/HostDetail" method="post">
+    <div id="contents">
+        <div class="sub_container">
+            <div class="row">
+                <div class="col md-1">
+                    <div class="sub_heading border_b">
+                        <h2>접견인 상세</h2>
+                    </div>
+                    <div class="row">
+                        <div class="md-1">
+                            <table class="view" width="100%" summary="view">
+                                <col width="35%" />
+                                <col width="35%" />
+                                </colgroup>
+                                <tbody>
+                                    @Html.HiddenFor(m => m.HostID)
+                                    <tr>
+                                        <th>성명</th>
+                                        <td>@Html.TextBoxFor(m => m.HostName)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>직급</th>
+                                        <td>@Html.TextBoxFor(m => m.GradeName)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>회사</th>
+                                        <td>@Html.TextBoxFor(m => m.Company)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>연락처</th>
+                                        <td>@Html.TextBoxFor(m => m.Mobile)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>내선번호</th>
+                                        <td>@Html.TextBoxFor(m => m.Tel)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="btn_area view">
+
+                                @if (Model != null)
+                                {
+                                    <button class="btn-save" type="submit">수정</button>
+                                    <button class="btn-delete" onclick="javascipt:HostDelete(@Model.HostID)">삭제</button>
+
+                                }
+                                else
+                                {
+                                    <button class="btn-save" type="submit">등록</button>
+                                }
+                                <button class="btn-list" type="button" onclick="location.href='@Url.Action("HostLIst", "Admin")'">목록</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,134 @@
+﻿@using System.Web.Optimization
+@{var action = HttpContext.Current.Request.RequestContext.RouteData.Values["Action"].ToString().ToLower(); }
+@{
+    ViewBag.Title = "강남 푸르덴셜 내방 관리자 웹";
+}
+<!DOCTYPE html>
+<!--HTML 5 Doctype-->
+<html>
+<head>
+    <!--페이지 Title-->
+    <title>@ViewBag.Title</title>
+    <!--웹페이지 인코딩 meta 태그.-->
+    <meta charset="utf-8">
+    <!--파비콘 지정시 해당 link를 head에 둔다.-->
+    <link rel="icon" href="@Url.Content("~/content/favicon.ico")" />
+    <!--번들 렌더링 구간.-->
+    @Styles.Render("~/Content/Css")
+    @Styles.Render("~/Content/Font")
+    @Styles.Render("~/Content/Layout")
+    @Scripts.Render("~/Script/js")
+    @Scripts.Render("~/Script/JsMigrate")
+    @Scripts.Render("~/Script/Validate")
+
+    <script>
+        $(function () {
+            // Main 시계 함수
+            function Clock() {
+                var theDate = new Date();
+
+                var t = theDate.getFullYear() + "-" + Pad(theDate.getMonth() + 1) + "-" + Pad(theDate.getDate()) + " ";
+                    t += Pad(theDate.getHours()) + ":" + Pad(theDate.getMinutes()) + ":" + Pad(theDate.getSeconds());
+                $('#clock').text(t);
+            }
+            setInterval(Clock, 1000);
+
+            //검색에 사용하는 SearchColumn을 Doc이 다 로드되면 체인지 시키게 미리 선언
+            if ("@ViewBag.SearchColumn" === "") {
+
+            }
+            else {
+                  $("#sbSearchColumn").val("@ViewBag.SearchColumn").change();
+
+            }
+
+        });
+        //시계에서 1일때 01로 바꿔주는 패딩 함수
+        function Pad(Data)
+        {
+            if(Data < 10)
+                Data = "0" + Data;
+
+            return Data;
+        }
+        //로고 눌렀을때 비밀번호 변경 상태라면 Main으로 넘기지 않아야 하는데 보안상 구멍이라 메움.
+        function MoveMain()
+        {
+            if ("@action" != "changepassword") {
+                window.location.href = "@Url.Action("Main", "Admin")";
+            }
+        }
+
+        //페이지 이동 함수 PageNev가 있으면 동작
+        function pageMove(movePage)
+        {
+            $('#currentPage').val(movePage);
+
+            $('#search').submit();
+        }
+
+        //다음 페이지 이동 함수
+        function pageNext(totalpage) {
+            var page = $('#currentPage').val();
+            page = Number(page) + 1;
+
+            if (totalpage+1 > page) {
+                $('#currentPage').val(page);
+
+                $('#search').submit();
+            }
+        }
+
+        //이전 페이지 이동 함수
+        function pagePrev() {
+            var page = $('#currentPage').val();
+            page = Number(page) - 1;
+            if (page > 0) {
+                $('#currentPage').val(page);
+                $('#search').submit();
+            }
+        }
+
+        //검색시 Submit 할수 있게 미리 Search 함수 정의
+        function search() {
+            $('#SearchColumn').val($('#sbSearchColumn').val());
+            $('#SearchString').val($('#txtSearchString').val());
+            $('#currentPage').val(1);
+            $('#search').submit();
+        }
+    </script>
+
+    @RenderSection("scripts", required: false)
+</head>
+<body>
+    <div id="wrapper">
+        <div id="header">
+            <h1><a onclick="MoveMain()"><img src="@Url.Content("~/Content/Images/logo.png")" alt="푸르덴셜" /></a></h1>
+            <div class="util_area">
+                <ul class="util">
+                    <!--시계-->
+                    <li><p id="clock">@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")</p></li>
+                    <!--관리자 정보 -->
+                    <li><span>ID : </span>@Session["UserID"]</li>
+                    <li><span>위치 : </span>@Session["LocationName"]</li>
+                </ul>
+            </div><!-- .util_area(E) -->
+        </div><!--.Header(E)-->
+        <div id="container">
+            @{
+
+
+                if (action != "login" && !action.Contains("popup") && action != "changepassword")
+                {
+                    //RenderPartial Vs Partial (RenderPartial은 Void 형식으로 Stream에 저장하고 캐싱기능이 있어 속도가 훨씬 빠르다.)
+                    //그에 비에 Partial은 String을 전달하기 때문에 어떤 메소드에 내용을 넘겨줄 수 있다.
+                    //여기서는 사이드바 그릴때만 PartialMain 사용한다.
+                    { Html.RenderPartial("PartialMain"); }
+                }
+            }
+            @RenderBody()
+        </div><!--.container(E)-->
+    </div><!--.wrapper(E)-->
+</body>
+</html>
+

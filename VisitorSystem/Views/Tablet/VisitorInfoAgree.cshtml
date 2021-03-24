@@ -1,0 +1,102 @@
+﻿@model VisitorSystem.Models.VisitorInfo
+
+@Styles.Render("~/SignPad/Css")
+@Scripts.Render("~/SignPad/Numeric")
+@Scripts.Render("~/SignPad/Bezier")
+@Scripts.Render("~/SignPad/Jq")
+@Scripts.Render("~/SignPad/Json")
+
+<script>
+    $(document).ready(function () {
+        $('#smoothed-variableStrokeWidth').signaturePad({ drawOnly: true, drawBezierCurves: true, variableStrokeWidth: true, lineTop: 120 });
+    });
+</script>
+
+
+<div id="header">
+    <h1>개인정보 수집ㆍ이용 및 제공 동의서</h1>
+</div><!--#header-->
+@using (Html.BeginForm("VisitorInfoAgree", "tablet", FormMethod.Post))
+{
+
+    <div id="container">
+        <div id="contents align_l">
+            <p class="top_text">당사는 푸르덴셜타워 방문자에 대한 출입카드 발급 등을 위해 최소한의 개인정보만 수집ㆍ이용 및 제공합니다. </p>
+            <h2>1) 개인정보의수집ㆍ이용에관한사항</h2>
+            <table class="privacy">
+                <colgroup>
+                    <col width="*" />
+                    <col width="20%" />
+                </colgroup>
+                <tr>
+                    <td>
+                        당사는 개인정보보호법 등 관련 법률에 따라 “푸르덴셜타워 방문자 출입카드 발급 및 빌딩
+                        관리” 목적으로 귀하의 개인정보를 다음과 같이 수집ㆍ이용하고자 합니다. 이에 동의 하십니까?
+                    </td>
+                    <td>동의함<span class="pl15">@Html.CheckBoxSimpleFor(m => m.AgreeFirst)</span></td>
+                </tr>
+            </table>
+            <ol class="pb30">
+                <li>ㆍ개인정보 수집ㆍ이용의 목적 : 푸르덴셜타워 방문자에 대한 출입카드 발급 및 빌딩 관리</li>
+                <li>ㆍ개인정보 수집ㆍ이용 항목 : 개인정보 (성명, 휴대폰번호)</li>
+                <li class="bold">ㆍ개인정보의 보유ㆍ이용 기간 : 방문자의 마지막 사업장 방문신청이 있었던 날로부터<span class="blue"> 3개월 이내</span> </li>
+                <li>ㆍ귀하가 제공한 개인정보는 상기 위 목적 외로는 이용되지 않습니다.   </li>
+                <li>ㆍ귀하는 본 개인정보 수집 · 이용에 대한 동의를 거부하실 권리가 있으며, 동의를 거부하실 경우 푸르덴셜타워 출입이 제한될 수 있습니다.</li>
+            </ol>
+
+            <h2>1)개인정보의수집ㆍ이용에관한사항</h2>
+            <table class="privacy">
+                <colgroup>
+                    <col width="*" />
+                    <col width="20%" />
+                </colgroup>
+                <tr>
+                    <td>
+                        당사는 개인정보보호법 등 관련 법률에 따라 “푸르덴셜타워 방문자 출입카드 발급 및 빌딩
+                        관리” 목적으로 귀하의 개인정보를 다음과 같이 수집ㆍ이용하고자 합니다. 이에 동의 하십니까?
+                    </td>
+                    <td>동의함<span class="pl15">@Html.CheckBoxSimpleFor(m => m.AgreeSecond)</span></td>
+                </tr>
+            </table>
+            <ol class="pb30">
+                <li class="bold">ㆍ개인정보를 제공받는 자 : ㈜에스원, ㈜에스텍시스템 </li>
+                <li class="bold">ㆍ개인정보를 제공받는 자의 이용 목적 : 푸르덴셜타워 방문자에 대한 출입카드 발급 및 빌딩 관리</li>
+                <li>ㆍ제공하는 개인정보 항목 : 개인정보 (성명, 휴대폰번호)</li>
+                <li class="bold">ㆍ개인정보의 보유ㆍ이용 기간 : 방문자의 마지막 사업장 방문신청이 있었던 날로부터 <span class="blue"> 3개월 이내</span>   </li>
+                <li>ㆍ귀하가 제공한 개인정보는 상기 위 목적 외로는 이용되지 않습니다.   </li>
+                <li>
+                    ㆍ귀하는 본 개인정보 제공에 대한 동의를 거부하실 권리가 있으며, 동의를 거부하실 경우 푸르덴셜타워 출입이 제한될 
+                    수 있습니다. 
+                </li>
+            </ol>
+            <div class="inn_footer">
+                <span class="day">
+                    <ul>
+                        <li>동의 일자 :  @DateTime.Now.ToShortDateString()</li>
+                        <li>동  의  자 : @Html.DisplayFor(m => m.VisitorName)</li>
+                    </ul>
+                </span>
+                <div class="sigPad" id="smoothed-variableStrokeWidth" style="width:304px;">
+                    <div class="sig sigWrapper" style="height:auto; border:1px solid black;">
+                        <div class="typed"></div>
+                        <canvas class="pad" width="300" height="150"></canvas>
+                        <input type="hidden" name="SignPad" class="output">
+                    </div>
+                    <ul class="sigNav">
+                        <li class="clearButton"><a href="#clear">지우기</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="btn_list">
+            <li><a href="@Url.Action("VisitorInfo", "tablet")"><img src="@Url.Content("~/Content/Images/icon/icon_prev.png")" width="60" height="60" border="0" alt=""></a></li>
+            <li><a href="@Url.Action("intro", "tablet")"><img src="@Url.Content("~/Content/Images/icon/icon_home.png")" width="60" height="60" border="0" alt=""></a></li>
+            <li><input type="image" name="submit" value="" src="@Url.Content("~/Content/Images/icon/icon_next.png")"></li>
+        </ul>
+    </div>
+}
+
+
+

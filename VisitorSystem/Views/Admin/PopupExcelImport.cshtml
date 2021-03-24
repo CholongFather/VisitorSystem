@@ -1,0 +1,35 @@
+﻿@Styles.Render("~/SignPad/Css")
+@Scripts.Render("~/SignPad/Numeric")
+@Scripts.Render("~/SignPad/Bezier")
+@Scripts.Render("~/SignPad/Jq")
+@Scripts.Render("~/SignPad/Json")
+
+<script>
+        if ("@ViewBag.Process" == "E") {
+        opener.location.reload();
+    }
+</script>
+
+<div class="heading">
+    <h2 style="padding-left:30px">내방객 Free Pass 등록</h2>
+</div><!--.heading(E)-->
+<div class="sub_container">
+    <div>
+        <h2>Xlsx 파일로 된 샘플을 참고하시어 등록해주세요.</h2>
+        @using (Html.BeginForm("PopupExcelImport", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <label for="file">파일 등록 : </label>
+
+            <!--서버 IIS 설정 Mime Type에 Xlsx 등록되어있는지 필히 참고 할것. accept = (xlsx)는 해당과 같이 바꿔서 사용-->
+            <input type="file" name="file" id="file"  accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" /><br>
+
+            <br>
+            @ViewBag.Message
+
+            <div class="btn_area center">
+                <button class="btn mr10" type="submit" value="">업로드</button>
+                <button class="btn badge-info mr10" onclick="javascript:window.close()">닫기</button>
+            </div>
+        }
+    </div>
+</div><!-- .sub_container(E) -->

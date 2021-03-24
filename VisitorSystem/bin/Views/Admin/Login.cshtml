@@ -1,0 +1,28 @@
+﻿@model VisitorSystem.Models.AdminUser
+
+    <div id="wrapper" class="dk_blue">
+        <div class="sub_container pt200 ">
+            <div class="row">
+                <h2 class="login_heading">강남 푸르덴셜 <br />내방객 시스템 관리자 웹</h2>
+                <div class="form_area">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.ValidationSummary(true)
+                        @Html.TextBoxFor(m => m.AdminID, new { @placeholder = "User ID", @name = "psw" })
+                        @Html.ValidationMessageFor(m => m.AdminID)
+                        @Html.PasswordFor(m => m.AdminPW, new { placeholder = "Password", @name = "psw" })
+                        <p class="error_txt">@Html.ValidationMessageFor(m => m.AdminPW)</p>
+                        <button class="login">로그인</button>
+                    }
+                </div>
+            </div>
+        </div><!-- .sub_container(E) -->
+    </div><!-- .wrapper(E) -->
+
+
+    <!--Https가 아닌 전송일 경우 AdminPW가 Post의 Context로 그냥 평문 전송이 되므로 캐치가 가능해진다.
+        그러나 Js단에서 암호화 해가지고 데이터를 넣는다 해도 Key가 드러나는 문제가 있어 어떻게 암호화 할지 감이 안잡힌다.
+
+        그냥 일단은 서버 사이드에서 암호화 처리를 하여 넣도록 한다. 나중에 이 부분에 보안이 필요하다면 Https 말고는 답이없다.
+        -->
+

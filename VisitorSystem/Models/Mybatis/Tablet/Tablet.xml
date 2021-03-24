@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<sqlMap namespace="Tablet" xmlns=
+"http://ibatis.apache.org/mapping" xmlns:xsi=
+"http://www.w3.org/2001/XMLSchema-instance" >
+  <statements>
+    <!--쿼리 ID에 점넣으면 네임스페이스와 쿼리 ID를 구분할 수가 없는 KnownBug가 존재하며 점을 넣어야 한다면 그냥 id값만 매핑하면 된다-->
+    <!--태블릿에서 사용하는 전체 쿼리-->
+    <select id="SelectVisitorID" parameterClass="VisitorInfo" resultClass="System.Int32">
+      SELECT ISNULL(VisitorID,0)
+      FROM VISITOR
+      WHERE VisitorName = #VisitorName#
+      AND Mobile = #VisitorMobile#
+    </select>
+
+    <select id="SelectVisitorHistorySeq" parameterClass="System.Int32" resultClass="VisitorInfo">
+      SELECT 
+      A.VisitorID,
+      B.VisitorName,
+      B.Company
+      FROM
+      VisitorHistory A, VIsitor B
+      WHERE
+      A.VisitorID = B.VisitorID AND
+      VisitorHistorySeq = #VisitorHistorySeq#
+    </select>
+
+    <update id="UpdateVisitorInfo" parameterClass="System.Int32" resultClass="VisitorInfo">
+      UPDATE VisitorHistory
+      SET
+      FROM
+      
+    </update>
+    
+    <!--특이하게 Visitor 입력시 Select Key 사용된 부분 현재 세션에 대해서만 ID를 반환하기 때문에 Select Max 하는것 보단 나음-->
+    <insert id="InsertVisitor" parameterClass="VisitorInfo">
+      INSERT INTO
+      VISITOR (VisitorName, Mobile, Company, LastVisitDate)
+      VALUES
+      (#VisitorName#  ,#VisitorMobile# , #VisitorCompany# , #VisitDateTime#)
+      <selectKey type="post" resultClass="System.Int32" Property="VisitorID" Column="VisitorID"> 
+      select @@IDENTITY as VisitorID
+      </selectKey>    
+    </insert>
+
+    <insert id="InsertVisitorHistory" parameterClass="VisitorInfo">
+      INSERT INTO
+      VISITORHISTORY (VisitorID, AgreeFirst, AgreeSecond, SignPath, VisitDate, HostID)
+      VALUES
+      (#VisitorID#,#AgreeFirstFlag#,#AgreeSecondFlag#,#SignPath#, #VisitDateTime#, #HostID#)
+    </insert>
+
+    <update id="UpdateVisitor" parameterClass="VisitorInfo">
+      UPDATE VISITOR
+      SET
+      LastVisitDate = #VisitDateTime#
+      WHERE VisitorID = #VisitorID#
+    </update>
+
+    <update id="UpdateVisitorHistoryAgree" parameterClass="VisitorInfo">
+      UPDATE VISITORHISTORY
+      SET
+      AgreeFirst = #AgreeFirstFlag#,
+      AgreeSecond = #AgreeSecondFlag#,
+      SignPath = #SignPath#,
+      VisitDate = #VisitDateTime#
+      WHERE VisitorHistorySeq = #VisitorHistorySeq#
+    </update>
+
+
+    <select id="SelectHostID" parameterClass="VisitorInfo" resultClass="System.Int32">
+      SELECT ISNULL(HostID,0)
+      FROM Host
+      WHERE HostName = #HostName#
+      AND Company = #HostCompany#
+    </select>
+    
+      <!--특이하게 Host 입력시 Select Key 사용된 부분 현재 세션에 대해서만 ID를 반환하기 때문에 Select Max 하는것 보단 나음-->
+      <insert id="InsertHost" parameterClass="VisitorInfo">
+      INSERT INTO
+      HOST (HostName, Company, InsertDate)
+      VALUES
+      (#HostName#, #HostCompany#, GetDate())
+      <selectKey type="post" resultClass="System.Int32" Property="HostID" Column="HostID"> 
+      select @@IDENTITY as HostID
+      </selectKey>  
+    </insert>
+    
+  </statements>
+</sqlMap>    

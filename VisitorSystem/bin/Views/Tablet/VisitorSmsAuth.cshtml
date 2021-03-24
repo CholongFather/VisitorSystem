@@ -1,0 +1,96 @@
+﻿@model VisitorSystem.Models.VisitorInfo
+
+<script type="text/javascript">
+    function SendSmS() {
+        $('#AuthProcess').html("인증번호 요청 중...");
+        $.ajax({
+            url: "/Tablet/SendSMS",
+            type: "get",
+            data: { VisitorMobile: $('#VisitorMobile').val() },
+            dataType: "Json",
+            success: function (response, textStatus, jqXHR) {
+                if (response.AuthNumber) {
+                    //Auth넘버 보낸 경우 Hidden Html에 세팅해서 서버에서 비교하게 끔 만듬.
+                    $("#AuthSendNumber").val(response.AuthNumber);
+                    $('#AuthProcess').html("인증번호 요청완료");
+                }
+            },
+            //에러시 동작할 Function 정의 Alert 창 하나 띄워서 SMS 진행 안되는 거 알려줌
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("SMS Service Error");
+            },
+            //해당 Ajax가 완료되면 해줄 Function 따로 없어서 만들지 않음
+            complete: function () {
+            }
+        });
+
+    };
+
+    function ReSendSmS() {
+        $('#AuthProcess').html("인증번호 재 요청 중...");
+        $.ajax({
+            url: "/Tablet/SendSMS",
+            type: "get",
+            data: { VisitorMobile: $('#VisitorMobile').val() },
+            dataType: "Json",
+            success: function (response, textStatus, jqXHR) {
+                if (response.AuthNumber) {
+                    //Auth넘버 보낸 경우 Hidden Html에 세팅해서 서버에서 비교하게 끔 만듬.
+                    $("#AuthSendNumber").val(response.AuthNumber);
+                    $('#AuthProcess').html("인증번호 재요청완료");
+                }
+            },
+            //에러시 동작할 Function 정의 Alert 창 하나 띄워서 SMS 진행 안되는 거 알려줌
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("SMS Service Error");
+            },
+            //해당 Ajax가 완료되면 해줄 Function 따로 없어서 만들지 않음
+            complete: function () {
+            }
+        });
+
+    };
+</script>
+
+
+@using (Html.BeginForm("VisitorSmsAuth", "tablet", FormMethod.Post))
+{
+
+    <div id="header">
+        <h1>개인정보 수집ㆍ이용 및 제공 동의서</h1>
+    </div><!--#header-->
+    <div id="container">
+        <div id="contents">
+            <p class="pb20 ">휴대폰번호 인증 요청 후, 문자로 전송 받으신 인증번호를 입력하신 후  “다음” 버튼을 눌러주세요. </p>
+            <div class="input-cont">
+                <div class="input-container">
+                    <span class="input_tit">휴대전화 번호</span>
+                @Html.TextBoxFor(m => m.VisitorMobile, new { placeholder = "010-1234-5678", @class = "form_input", @readonly = "readonly" })
+                    <span type="button" onclick="SendSmS()" style="width:200px;cursor:pointer;" id="SendSms" name="SendSms" value="인증요청" class="input_tit flpat_l">인증요청</span>
+                </div><!--.input-container(E)-->
+                <div class="input-container">
+                    <span class="input_tit">인증번호</span>@Html.TextBoxFor(m => m.AuthNumber, new { placeholder = "인증번호를 입력해주세요", @class = "form_input" })
+                </div><!--.input-container(E)-->
+            </div>	<!--.input-cont(E)-->
+            <div class="pt100">
+                <p id="AuthProcess" style="color:red; margin: 10px;"></p>
+                <p>인증 번호 문자를 받지 못하신 경우 인증번호 재 요청 버튼을 눌러주세요.</p>
+                <div class="btn_area ">
+                    <input type="hidden" id="AuthSendNumber" name="AuthSendNumber">
+                    <button class="btn" onclick="ReSendSmS()" type="button" id="SendSmsRetry" name="SendSms">인증번호 재요청</button>
+                </div><!--.btn_area-->
+
+                <p>휴대폰 인증이 되지 않았을 경우 출입에 제한을 받으실 수 있습니다.
+                <p class="red">휴대폰을 소지 하지 않으신 분 또는 인증을 받지 못하신 분은 안내데스크에 문의해주세요.</p>
+            </div>
+        </div>
+    </div>
+    <div id="footer">
+        <ul class="btn_list">
+            <li><a href="@Url.Action("VisitorInfoAgree", "tablet")"><img src="@Url.Content("~/Content/Images/icon/icon_prev.png")" width="60" height="60" border="0" alt=""></a></li>
+            <li><a href="@Url.Action("intro", "tablet")"><img src="@Url.Content("~/Content/Images/icon/icon_home.png")" width="60" height="60" border="0" alt=""></a></li>
+            <li><input type="image" name="submit" value="" src="@Url.Content("~/Content/Images/icon/icon_next.png")"></li>
+        </ul>
+    </div>
+
+}

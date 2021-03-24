@@ -1,0 +1,98 @@
+﻿@model List<VisitorSystem.Models.Card>
+
+<script>
+    function AddCard() {
+        location.href = '@Url.Action("CardDetail", "Admin", new { CardID = "0" })';
+    }
+</script>
+
+<div id="contents">
+    <div class="sub_container">
+        <div class="row">
+            <div class="col md-1">
+                <div class="sub_heading">
+                    <h2 class="mr15">카드 관리</h2>
+                    <button class="btn-top" onclick="AddCard()">카드 등록</button>
+                    <div class="search-container">
+                        <form id="search" method="get">
+                            <select id="sbSearchColumn" class="form-control form-inline">
+                                <option value="CardID" selected="selected">카드 아이디</option>
+                                <option value="CardFlag">카드상태</option>
+                            </select>
+                            <input type="hidden" id="SearchColumn" name="SearchColumn" value="@ViewBag.SearchColumn">
+                            <input type="text" id="txtSearchString" value="@ViewBag.SearchString">
+                            <input type="hidden" id="SearchString" name="SearchString" value="@ViewBag.SearchString">
+                            <button onclick="search()"><span class="icon seach"></span></button>
+                            <input type="hidden" name="currentPage" id="currentPage" value="@ViewBag.CurrentPage" />
+                        </form>
+                    </div><!-- .search-container(E) -->
+                </div><!-- .sub_heading(E) -->
+                <div class="row">
+                    <div class="md-1">
+                        <table class="list" width="100%" summary="위치 등록">
+                            <caption><span class="offsreen">위치 등록</span></caption>
+                            <colgroup>
+                                <col width="25%" />
+                                <col width="25%" />
+                                <col width="25%" />
+                                <col width="*" />
+                            </colgroup>
+                            <thead>
+                            <th scope="카드 ID">카드 아이디</th>
+                            <th scope="카드 번호">카드 번호</th>
+                            <th scope="카드상태 IRS">카드상태</th>
+                            <th scope="카드 등록일">카드 등록일</th>
+                            </thead>
+                            <!--테이블 내용 부분-->
+                            <tbody>
+                                @foreach (VisitorSystem.Models.Card card in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.ActionLink(card.CardID, "CardDetail", new { CardID = card.CardID }, new { @class = "link" })</td>
+                                        <td>@card.CardNo</td>
+
+                                        @{
+                                            string CardFlag = "미발급";
+                                            if (card.CardFlag == 'I') { CardFlag = "발급"; }
+                                            else if (card.CardFlag == 'S') { CardFlag = "미회수"; }
+                                            else if (card.CardFlag == 'R') { CardFlag = "회수"; }
+                                        }
+
+                                        <td>@CardFlag (@card.CardFlag)</td>
+                                        <td>@card.InsertDate</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <!--table(E)-->
+                        <div class="pageing">
+                            <ul class="page">
+
+                                @{
+                                    int pageCount = ViewBag.TotalCount / ViewBag.PagePerData + 1;
+                                    <li><a href="javascript:pagePrev()"><span class="icon prev">&nbsp;</span></a></li>
+                                    for (int i = 1; i < pageCount + 1; i++)
+                                    {
+                                        if (i == ViewBag.CurrentPage)
+                                        {
+                                            <li><a href="javascript:pageMove(@i);" class="active">@i</a></li>
+                                        }
+                                        else
+                                        {
+                                            <li><a href="javascript:pageMove(@i);">@i</a></li>
+                                        }
+
+                                    }
+                                    <li><a href="javascript:pageNext(@pageCount)"><span class="icon next">&nbsp;</span></a></li>
+                                }
+
+                            </ul>
+                        </div><!-- .paging(E) -->
+                    </div><!-- .md-1(E) -->
+                </div><!-- .row(E) -->
+
+            </div><!-- .col md-1(E) -->
+        </div><!-- .row(E) -->
+    </div>
+
+</div><!--contents(E)-->

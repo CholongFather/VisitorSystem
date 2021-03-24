@@ -1,0 +1,87 @@
+﻿@model VisitorSystem.Models.VisitorInfo
+
+<script>
+    function VisitorHistoryDelete(VisitorHistorySeq) {
+        if (confirm("등록된 내방 이력 정보를 지우시겠습니까?"))
+            location.href = '@Url.Action("VisitorHistoryDelete", "Admin")?VisitorHistorySeq=' + VisitorHistorySeq;
+        else
+            return false;
+    }
+</script>
+
+<form action="/Admin/VisitorHistoryDetail" method="post">
+    <div id="contents">
+        <div class="sub_container">
+            <div class="row">
+                <div class="col md-1">
+                    <div class="sub_heading border_b">
+                        <h2>내방 이력 상세 조회</h2>
+                    </div><!-- .sub_heading(E) -->
+
+                    @Html.HiddenFor(m => m.VisitorID)
+                    @Html.HiddenFor(m => m.HostID)
+                    <div class="row">
+                        <div class="md-1">
+                            <table class="view" width="100%" summary="view">
+                                <colgroup>
+                                <col width="15%" />
+                                <col width="20%" />
+                                <col width="15%" />
+                                <col width="20%" />
+                                </colgroup>
+                                <tbody>
+                                    <tr>
+                                        <th>성명</th>
+                                        <td>@Html.TextBoxFor(m => m.VisitorName)</td>
+                                        <th>접견인</th>
+                                        <td>@Html.TextBoxFor(m => m.HostName)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>연락처</th>
+                                        <td>@Html.TextBoxFor(m => m.VisitorMobile)</td>
+                                        <th>회사명</th>
+                                        <td>@Html.TextBoxFor(m => m.HostCompany)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>회사명</th>
+                                        <td>@Html.TextBoxFor(m => m.VisitorCompany)</td>
+                                        <th>개인 정보 동의 1</th>
+                                        <td>@Html.DisplayFor(m => m.AgreeFirstFlag)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>내방 일자</th>
+                                        <td>@Html.TextBoxFor(m => m.VisitDateTime)</td>
+                                        <th>개인 정보 동의 2</th>
+                                        <td>@Html.DisplayFor(m => m.AgreeSecondFlag)</td>
+                                    </tr>
+                                    <tr>
+                                        <th>카드 번호</th>
+                                        <td>@Html.TextBoxFor(m => m.CardID)</td>
+                                        <th>동의 사인</th>
+                                        <td class="border"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>카드 상태</th>
+                                        <td><input type="text" value="발급" size="50"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="pt30">내방 전달 사항</th>
+                                        <td colspan="3">
+                                            <textarea>@Model.VisitorDesc</textarea>
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                            <div class="btn_area view">
+                                <button class="btn mr10" type="submit">저장</button><button class="btn badge-info" type="submit">목록</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+
